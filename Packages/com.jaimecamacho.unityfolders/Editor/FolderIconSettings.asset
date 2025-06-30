@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f95782c902a46d54e94d7ed74b5aea66, type: 3}
+  m_Name: FolderIconSettings
+  m_EditorClassIdentifier: 
+  rules:
+  - name: MESH
+    ruleType: 0
+    match: holi
+    icon: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+    color: {r: 0.754717, g: 0.75217044, b: 0.41651833, a: 0}
+    enabled: 1
+    priority: 1

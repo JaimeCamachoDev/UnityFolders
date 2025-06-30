@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.jaimecamacho.packagecreator": "1.0.2",
     "com.unity.render-pipelines.universal": "17.0.4"
   },
   "scopedRegistries": [
