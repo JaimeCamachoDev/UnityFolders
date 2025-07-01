@@ -1,6 +1,7 @@
+
 using UnityEditor;
 using UnityEngine;
-using UnityFolders;
+using Borodar.RainbowFolders;
 
 namespace JaimeCamachoDev.UnityFolders
 {
@@ -12,7 +13,7 @@ namespace JaimeCamachoDev.UnityFolders
         [MenuItem("Tools/JaimeCamachoDev/UnityFolders/Create Ruleset")]
         public static void CreateRuleset()
         {
-            var ruleset = ScriptableObject.CreateInstance<FolderRuleset>();
+            var ruleset = ScriptableObject.CreateInstance<ProjectRuleset>();
             if (!AssetDatabase.IsValidFolder("Assets/Resources"))
                 AssetDatabase.CreateFolder("Assets", "Resources");
 
