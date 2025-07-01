@@ -4,18 +4,30 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using System;
+using System.Reflection;
 
 [InitializeOnLoad]
 public static class FolderIconsManager
 {
     static FolderIconsSettings settings;
     static Texture2D gradientTex;
+    static Type projectBrowserType;
+    static FieldInfo lastInteractedProjectBrowserField;
+    static FieldInfo viewModeField;
 
     static FolderIconsManager()
     {
         EditorApplication.projectWindowItemOnGUI += DrawCustomIcons;
         LoadSettings();
         CreateGradient();
+        InitReflection();
+    }
+
+    static void InitReflection()
+    {
+        projectBrowserType = typeof(Editor).Assembly.GetType("UnityEditor.ProjectBrowser");
+        lastInteractedProjectBrowserField = projectBrowserType?.GetField("s_LastInteractedProjectBrowser", BindingFlags.Static | BindingFlags.NonPublic);
+        viewModeField = projectBrowserType?.GetField("m_ViewMode", BindingFlags.Instance | BindingFlags.NonPublic);
     }
 
     static void LoadSettings()
@@ -41,6 +53,18 @@ public static class FolderIconsManager
         gradientTex.Apply();
     }
 
+    static bool IsInLeftColumn(Rect selectionRect)
+    {
+        if (projectBrowserType == null || lastInteractedProjectBrowserField == null || viewModeField == null)
+            return false;
+
+        var browser = lastInteractedProjectBrowserField.GetValue(null);
+        if (browser == null) return false;
+
+        int viewMode = (int)viewModeField.GetValue(browser);
+        return viewMode == 1 && selectionRect.xMax < 200f && selectionRect.height <= EditorGUIUtility.singleLineHeight + 4;
+    }
+
     static void DrawCustomIcons(string guid, Rect selectionRect)
     {
         if (settings == null) return;
@@ -55,15 +79,18 @@ public static class FolderIconsManager
             if (!Match(rule, path, folderName)) continue;
 
             bool isGrid = selectionRect.height > 25f && selectionRect.width > 25f;
+            bool isInLeftColumn = !isGrid && IsInLeftColumn(selectionRect);
             Texture2D icon = isGrid ? rule.iconLarge : rule.iconSmall;
 
-            // Gradiente en columna izquierda (solo sobre el ancho real del área de texto)
+            // Gradiente
             if (rule.background.a > 0.01f)
             {
                 Rect labelRect;
                 if (isGrid)
                 {
-                    labelRect = new Rect(selectionRect.x, selectionRect.yMax - EditorGUIUtility.singleLineHeight + 2f, selectionRect.width, EditorGUIUtility.singleLineHeight);
+                    float textHeight = EditorGUIUtility.singleLineHeight;
+                    float labelY = selectionRect.yMax - textHeight + 2f;
+                    labelRect = new Rect(selectionRect.x, labelY, selectionRect.width, textHeight);
                 }
                 else
                 {
@@ -78,12 +105,30 @@ public static class FolderIconsManager
                 GUI.color = Color.white;
             }
 
-            // Icono centrado
+            // Icono ajustado según columna
             if (icon != null)
             {
-                Rect iconRect = isGrid
-                    ? new Rect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height - EditorGUIUtility.singleLineHeight)
-                    : new Rect(selectionRect.x, selectionRect.y, selectionRect.height, selectionRect.height);
+                Rect iconRect;
+                if (isGrid)
+                {
+                    float size = selectionRect.height - EditorGUIUtility.singleLineHeight;
+                    float iconX = selectionRect.x + (selectionRect.width - size) * 0.5f;
+                    iconRect = new Rect(iconX, selectionRect.y, size, size);
+                }
+                else if (isInLeftColumn)
+                {
+                    iconRect = new Rect(selectionRect.x + 1f, selectionRect.y + 1f, selectionRect.height - 2f, selectionRect.height - 2f);
+                }
+                else
+                {
+                    iconRect = new Rect(selectionRect.x + 3f, selectionRect.y + 1f, selectionRect.height - 2f, selectionRect.height - 2f);
+                }
+
+                // Truco para ocultar el ícono base de Unity sin cuadro blanco
+                Color prevColor = GUI.color;
+                GUI.color = new Color(0.2196078f, 0.2196078f, 0.2196078f, 1f);
+                GUI.DrawTexture(iconRect, Texture2D.whiteTexture);
+                GUI.color = prevColor;
 
                 GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit, true);
             }
@@ -97,7 +142,7 @@ public static class FolderIconsManager
         return rule.matchType switch
         {
             MatchType.Name => name.Equals(rule.match, StringComparison.OrdinalIgnoreCase),
-            MatchType.Path => path.Replace("\\", "/").Contains(rule.match),
+            MatchType.Path => path.Replace("\\", " / ").Contains(rule.match),
             MatchType.Regex => System.Text.RegularExpressions.Regex.IsMatch(path, rule.match),
             _ => false,
         };
