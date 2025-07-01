@@ -117,11 +117,11 @@ public static class FolderIconsManager
                 }
                 else if (isInLeftColumn)
                 {
-                    iconRect = new Rect(selectionRect.x + 1f, selectionRect.y + 1f, selectionRect.height - 2f, selectionRect.height - 2f);
+                    iconRect = new Rect(selectionRect.x, selectionRect.y, selectionRect.height, selectionRect.height);
                 }
                 else
                 {
-                    iconRect = new Rect(selectionRect.x + 3f, selectionRect.y + 1f, selectionRect.height - 2f, selectionRect.height - 2f);
+                    iconRect = new Rect(selectionRect.x + 1, selectionRect.y, selectionRect.height, selectionRect.height);
                 }
 
                 // Truco para ocultar el ícono base de Unity sin cuadro blanco
