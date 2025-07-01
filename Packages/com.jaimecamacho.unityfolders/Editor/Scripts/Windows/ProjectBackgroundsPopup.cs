@@ -1,30 +1,141 @@
+﻿using System;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
 namespace Borodar.RainbowFolders
 {
-    public class ProjectBackgroundsPopup : EditorWindow
+    public class ProjectBackgroundsPopup : ProjectSelectionPopup<ProjectBackground>
     {
-        private Vector2 scroll;
+        //---------------------------------------------------------------------
+        // Public
+        //---------------------------------------------------------------------
 
-        [MenuItem("Tools/JaimeCamachoDev/UnityFolders/Show Backgrounds Popup")]
-        public static void ShowWindow()
+        public static ProjectBackgroundsPopup GetDraggableWindow()
         {
-            var window = GetWindow<ProjectBackgroundsPopup>(true, "Backgrounds Popup");
-            window.minSize = new Vector2(300, 200);
+            return GetDraggableWindow<ProjectBackgroundsPopup>();
         }
 
-        public static T GetDraggableWindow<T>() where T : EditorWindow
+        //---------------------------------------------------------------------
+        // Protected
+        //---------------------------------------------------------------------
+
+        protected override void DrawButtons(Rect rect)
         {
-            return EditorWindow.GetWindow<T>(true, typeof(T).Name, true);
+            DrawCategoryButton(rect, "All");
+
+            rect.y += LINE_HEIGHT * 9f + SPACING * 6f;
+            DrawCustomButton(rect);
+            rect.y += LINE_HEIGHT + SPACING;
+            DrawNoneButton(rect);
         }
 
-        private void OnGUI()
+        protected override void DrawIcons(Rect rect)
         {
-            EditorGUILayout.LabelField("Backgrounds Popup (Simplificado)", EditorStyles.boldLabel);
-            scroll = EditorGUILayout.BeginScrollView(scroll);
-            EditorGUILayout.HelpBox("Aquí podrías mostrar fondos si decides mantener esta vista.", MessageType.Info);
+            GUILayout.BeginArea(rect);
+            ScrollPos = BeginScrollView(ScrollPos);
+
+            var predicate = GetCategoryPredicate();
+            var icons = Enum.GetValues(typeof(ProjectBackground))
+                .Cast<ProjectBackground>()
+                .Where(predicate)
+                .ToList();
+
+            GUILayout.BeginVertical();
+            DrawIconsGrid(icons);
+            GUILayout.EndVertical();
+
             EditorGUILayout.EndScrollView();
+            GUILayout.EndArea();
+        }
+
+        protected override void DrawIconButton(ProjectBackground backgroundType)
+        {
+            var rect = EditorGUILayout.GetControlRect(GUILayout.Width(66), GUILayout.Height(22));
+            if (GUI.Button(rect, GUIContent.none, "grey_border"))
+            {
+                AssignBackgroundByType(ProjectRule, backgroundType);
+            }
+
+            var backgroundTex = ProjectBackgroundsStorage.GetBackground(backgroundType);
+            DrawPreview(rect, backgroundTex);
+        }
+
+        //---------------------------------------------------------------------
+        // Helpers
+        //---------------------------------------------------------------------
+
+        private void DrawCategoryButton(Rect rect, string text)
+        {
+            if (!GUI.Button(rect, text, "MiniToolbarButtonLeft")) return;
+            ApplyIconsCategory();
+        }
+
+        private void DrawCustomButton(Rect rect)
+        {
+            if (!GUI.Button(rect, "Custom", "minibutton")) return;
+            AssignBackgroundByType(ProjectRule, ProjectBackground.Custom);
+        }
+
+        private void DrawNoneButton(Rect rect)
+        {
+            if (!GUI.Button(rect, "None", "minibutton")) return;
+            ResetBackgroundToDefault(ProjectRule);
+        }
+
+        private static Func<ProjectBackground, bool> GetCategoryPredicate()
+        {
+            return icon => (int) icon >= 10 && (int) icon < 500;
+        }
+
+        private static void DrawPreview(Rect rect, Texture icon)
+        {
+            rect.x += 1f;
+            rect.y += 1f;
+            rect.width = PREVIEW_SIZE_LARGE;
+            rect.height = PREVIEW_SIZE_SMALL + 4f;
+
+            GUI.Label(rect, "Folder", "CenteredLabel");
+            GUI.DrawTexture(rect, icon);
+        }
+
+        private void ApplyIconsCategory()
+        {
+            ScrollPos = Vector2.zero;
+        }
+
+        private void AssignBackgroundByType(dynamic rule, ProjectBackground type)
+        {
+            if (IsRuleSerialized)
+            {
+                rule.FindPropertyRelative("BackgroundType").intValue = (int) type;
+                rule.FindPropertyRelative("BackgroundTexture").objectReferenceValue = null;
+                ApplyPropertyChangesAndClose(rule);
+            }
+            else
+            {
+                rule.BackgroundType = type;
+                rule.BackgroundTexture = null;
+                CloseAndRepaintParent();
+            }
+        }
+
+        private void ResetBackgroundToDefault(dynamic rule)
+        {
+            if (IsRuleSerialized)
+            {
+                rule.FindPropertyRelative("BackgroundType").intValue = (int) ProjectBackground.None;
+                rule.FindPropertyRelative("BackgroundTexture").objectReferenceValue = null;
+                rule.FindPropertyRelative("IsBackgroundRecursive").boolValue = false;
+                ApplyPropertyChangesAndClose(rule);
+            }
+            else
+            {
+                rule.BackgroundType = ProjectBackground.None;
+                rule.BackgroundTexture = null;
+                rule.IsBackgroundRecursive = false;
+                CloseAndRepaintParent();
+            }
         }
     }
 }
