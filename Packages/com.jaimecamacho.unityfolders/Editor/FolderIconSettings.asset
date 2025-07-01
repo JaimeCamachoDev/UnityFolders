@@ -16,7 +16,21 @@ MonoBehaviour:
   - name: MESH
     ruleType: 0
     match: holi
-    icon: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
-    color: {r: 0.754717, g: 0.75217044, b: 0.41651833, a: 0}
-    enabled: 1
+    icon: {fileID: 0}
+    color: {r: 1, g: 1, b: 0, a: 0.16470589}
+    enabled: 0
     priority: 1
+  - name: MESH
+    ruleType: 0
+    match: holi
+    icon: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+    color: {r: 1, g: 0, b: 0.110224724, a: 0.5372549}
+    enabled: 1
+    priority: 2
+  - name: MESH
+    ruleType: 0
+    match: holi
+    icon: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+    color: {r: 1, g: 0, b: 0.110224724, a: 0.5372549}
+    enabled: 0
+    priority: 3
