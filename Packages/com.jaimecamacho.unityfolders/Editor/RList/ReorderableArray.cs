@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Borodar.RainbowFolders.RList {
+namespace UnityFolders.RList {
 
 	[Serializable]
 	public abstract class ReorderableArray<T> : ICloneable, IList<T>, ICollection<T>, IEnumerable<T> {

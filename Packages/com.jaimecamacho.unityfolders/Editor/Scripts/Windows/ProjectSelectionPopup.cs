@@ -2,9 +2,9 @@
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using static Borodar.RainbowFolders.ColorHelper;
+using static UnityFolders.ColorHelper;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     public abstract class ProjectSelectionPopup<T> : DraggablePopupWindow where T : System.Enum
     {

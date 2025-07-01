@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     public class EditorPrefsModifierKey : EditorPrefsItem<EventModifiers> {
 

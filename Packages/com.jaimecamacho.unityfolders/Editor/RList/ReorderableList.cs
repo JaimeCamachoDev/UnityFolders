@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.RainbowFolders.RList {
+namespace UnityFolders.RList {
 
 	public class ReorderableList {
 

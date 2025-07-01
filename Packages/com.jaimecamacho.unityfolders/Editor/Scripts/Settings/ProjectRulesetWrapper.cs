@@ -1,4 +1,4 @@
-﻿namespace Borodar.RainbowFolders
+﻿namespace UnityFolders
 {
     internal sealed class ProjectRulesetWrapper
     {

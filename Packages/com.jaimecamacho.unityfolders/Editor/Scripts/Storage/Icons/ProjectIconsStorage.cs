@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using StorageHelper = Borodar.RainbowFolders.TexturesStorageHelper<Borodar.RainbowFolders.ProjectIcon>;
+using StorageHelper = UnityFolders.TexturesStorageHelper<UnityFolders.ProjectIcon>;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     public static class ProjectIconsStorage
     {
