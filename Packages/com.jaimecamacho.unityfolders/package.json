@@ -6,7 +6,7 @@
   ],
   "license": "MIT",
   "name": "com.jaimecamacho.unityfolders",
-  "unity": "6000.0",
+  "unity": "2021.3",
   "unityRelease": "0f1",
   "version": "1.0.0",
   "description": "Carpetas personalizadas para Unity"
