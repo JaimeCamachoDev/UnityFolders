@@ -1,5 +1,4 @@
 {
   "name": "com.jaimecamacho.unityfolders.Editor",
-  "references": ["com.jaimecamacho.unityfolders.Runtime"],
   "includePlatforms": ["Editor"]
 }
