@@ -1,61 +1,77 @@
+
 using UnityEditor;
 using UnityEngine;
-using UnityEditorInternal;
 
 [CustomEditor(typeof(FolderIconsSettings))]
 public class FolderIconsSettingsEditor : Editor
 {
-    private ReorderableList list;
+    private SerializedProperty rules;
 
     private void OnEnable()
     {
-        list = new ReorderableList(
-            serializedObject,
-            serializedObject.FindProperty("rules"),
-            draggable: true,
-            displayHeader: true,
-            displayAddButton: true,
-            displayRemoveButton: true
-        );
-
-        list.drawHeaderCallback = (Rect rect) =>
-        {
-            EditorGUI.LabelField(rect, "Reglas de Carpetas");
-        };
-
-        list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-        {
-            var element = list.serializedProperty.GetArrayElementAtIndex(index);
-            float y = rect.y + 2f;
-            float x = rect.x;
-            float lineHeight = EditorGUIUtility.singleLineHeight;
-
-            EditorGUI.PropertyField(new Rect(x, y, rect.width * 0.5f, lineHeight), element.FindPropertyRelative("ruleName"), GUIContent.none);
-            EditorGUI.PropertyField(new Rect(x + rect.width * 0.52f, y, rect.width * 0.48f, lineHeight), element.FindPropertyRelative("matchType"), GUIContent.none);
-
-            y += lineHeight + 2;
-            EditorGUI.PropertyField(new Rect(x, y, rect.width, lineHeight), element.FindPropertyRelative("match"));
-
-            y += lineHeight + 2;
-            EditorGUI.PropertyField(new Rect(x, y, rect.width * 0.5f, lineHeight), element.FindPropertyRelative("iconSmall"));
-            EditorGUI.PropertyField(new Rect(x + rect.width * 0.52f, y, rect.width * 0.48f, lineHeight), element.FindPropertyRelative("iconLarge"));
-
-            y += lineHeight + 2;
-            EditorGUI.PropertyField(new Rect(x, y, rect.width * 0.33f, lineHeight), element.FindPropertyRelative("background"));
-            EditorGUI.PropertyField(new Rect(x + rect.width * 0.35f, y, rect.width * 0.3f, lineHeight), element.FindPropertyRelative("eraseDefault"));
-            EditorGUI.PropertyField(new Rect(x + rect.width * 0.67f, y, rect.width * 0.33f, lineHeight), element.FindPropertyRelative("enabled"));
-
-            y += lineHeight + 2;
-            EditorGUI.PropertyField(new Rect(x, y, rect.width * 0.5f, lineHeight), element.FindPropertyRelative("priority"));
-        };
-
-        list.elementHeightCallback = (index) => EditorGUIUtility.singleLineHeight * 5 + 10;
+        rules = serializedObject.FindProperty("rules");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        list.DoLayoutList();
+
+        EditorGUILayout.LabelField("Reglas de Carpetas", EditorStyles.boldLabel);
+
+        for (int i = 0; i < rules.arraySize; i++)
+        {
+            SerializedProperty rule = rules.GetArrayElementAtIndex(i);
+            SerializedProperty name = rule.FindPropertyRelative("match");
+            SerializedProperty type = rule.FindPropertyRelative("matchType");
+            SerializedProperty iconSmall = rule.FindPropertyRelative("iconSmall");
+            SerializedProperty iconLarge = rule.FindPropertyRelative("iconLarge");
+            SerializedProperty background = rule.FindPropertyRelative("background");
+            SerializedProperty enabled = rule.FindPropertyRelative("enabled");
+            SerializedProperty priority = rule.FindPropertyRelative("priority");
+
+            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginHorizontal();
+            name.stringValue = EditorGUILayout.TextField(name.stringValue);
+            type.enumValueIndex = (int)(MatchType)EditorGUILayout.EnumPopup((MatchType)type.enumValueIndex);
+            enabled.boolValue = EditorGUILayout.Toggle(enabled.boolValue, GUILayout.Width(20));
+            EditorGUILayout.EndHorizontal();
+
+            iconSmall.objectReferenceValue = EditorGUILayout.ObjectField("Icon Small", iconSmall.objectReferenceValue, typeof(Texture2D), false) as Texture2D;
+            iconLarge.objectReferenceValue = EditorGUILayout.ObjectField("Icon Large", iconLarge.objectReferenceValue, typeof(Texture2D), false) as Texture2D;
+            background.colorValue = EditorGUILayout.ColorField("Background", background.colorValue);
+            priority.intValue = EditorGUILayout.IntField("Priority", priority.intValue);
+
+            // Preview
+            Rect previewRect = GUILayoutUtility.GetRect(64, 20, GUILayout.ExpandWidth(true));
+            DrawPreview(previewRect, background.colorValue, iconSmall.objectReferenceValue as Texture2D, name.stringValue);
+
+            if (GUILayout.Button("Eliminar esta regla"))
+                rules.DeleteArrayElementAtIndex(i);
+
+            EditorGUILayout.EndVertical();
+        }
+
+        if (GUILayout.Button("Añadir nueva regla"))
+        {
+            rules.InsertArrayElementAtIndex(rules.arraySize);
+        }
+
         serializedObject.ApplyModifiedProperties();
+    }
+
+    private void DrawPreview(Rect rect, Color background, Texture2D icon, string text)
+    {
+        Color prevColor = GUI.color;
+        GUI.color = background;
+        GUI.DrawTexture(rect, Texture2D.whiteTexture, ScaleMode.StretchToFill);
+        GUI.color = prevColor;
+
+        if (icon != null)
+        {
+            GUI.DrawTexture(new Rect(rect.x, rect.y, rect.height, rect.height), icon, ScaleMode.ScaleToFit, true);
+        }
+
+        Rect labelRect = new Rect(rect.x + rect.height, rect.y, rect.width - rect.height, rect.height);
+        GUI.Label(labelRect, text, EditorStyles.whiteLabel);
     }
 }
