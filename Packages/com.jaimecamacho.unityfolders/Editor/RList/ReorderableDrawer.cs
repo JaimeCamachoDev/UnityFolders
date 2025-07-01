@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace UnityFolders.RList {
 
@@ -84,23 +83,17 @@ namespace UnityFolders.RList {
 
 					if (attrib != null) {
 
-						Texture icon = !string.IsNullOrEmpty(attrib.elementIconPath) ? AssetDatabase.GetCachedIcon(attrib.elementIconPath) : null;
+                                                Texture icon = !string.IsNullOrEmpty(attrib.elementIconPath)
+                                                    ? AssetDatabase.GetCachedIcon(attrib.elementIconPath)
+                                                    : null;
 
-						ReorderableList.ElementDisplayType displayType = attrib.singleLine ? ReorderableList.ElementDisplayType.SingleLine : ReorderableList.ElementDisplayType.Auto;
-
-						list = new ReorderableList(array, attrib.add, attrib.remove, attrib.draggable, displayType, attrib.elementNameProperty, attrib.elementNameOverride, icon);
-						list.paginate = attrib.paginate;
-						list.pageSize = attrib.pageSize;
-						list.sortable = attrib.sortable;
-
-						//handle surrogate if any
-
-						if (attrib.surrogateType != null) {
-
-							SurrogateCallback callback = new SurrogateCallback(attrib.surrogateProperty);
-
-							list.surrogate = new ReorderableList.Surrogate(attrib.surrogateType, callback.SetReference);
-						}
+                                                list = new ReorderableList(array, attrib.add, attrib.remove, attrib.draggable);
+                                                list.elementDisplayType = attrib.singleLine
+                                                    ? ReorderableList.ElementDisplayType.SingleLine
+                                                    : ReorderableList.ElementDisplayType.Auto;
+                                                list.paginate = attrib.paginate;
+                                                list.pageSize = attrib.pageSize;
+                                                list.sortable = attrib.sortable;
 					}
 					else {
 
@@ -109,33 +102,10 @@ namespace UnityFolders.RList {
 
 					lists.Add(id, list);
 				}
-				else {
-
-					list.List = array;
-				}
 			}
 
 			return list;
 		}
 
-		private struct SurrogateCallback {
-
-			private string property;
-
-			internal SurrogateCallback(string property) {
-
-				this.property = property;
-			}
-
-			internal void SetReference(SerializedProperty element, Object objectReference, ReorderableList list) {
-
-				SerializedProperty prop = !string.IsNullOrEmpty(property) ? element.FindPropertyRelative(property) : null;
-
-				if (prop != null && prop.propertyType == SerializedPropertyType.ObjectReference) {
-
-					prop.objectReferenceValue = objectReference;
-				}
-			}
-		}
 	}
 }
