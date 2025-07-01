@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Borodar.RainbowFolders.RList;
+using UnityEditorInternal;
 using UnityEditor;
 using UnityEngine;
 using static Borodar.RainbowFolders.ProjectRule.KeyType;
@@ -19,6 +19,7 @@ namespace Borodar.RainbowFolders
 
         private SerializedProperty _foldersProperty;
         private ReorderableList _reorderableList;
+        private GUIContent _listLabel = new GUIContent(string.Empty);
 
         private string _query = string.Empty;
         private Enum _filter = Filter.All;
@@ -46,17 +47,18 @@ namespace Borodar.RainbowFolders
             EDITORS.Add(this);
 
             _foldersProperty = serializedObject.FindProperty(PROP_NAME_FOLDERS);
-            _reorderableList = new ReorderableList(_foldersProperty)
-            {
-                label = new GUIContent(string.Empty),
-                elementDisplayType = ReorderableList.ElementDisplayType.SingleLine,
-                expandable = false,
-                headerHeight = 0f,
-                paginate = true,
-                pageSize = 10,
-            };
+            _reorderableList = new ReorderableList(serializedObject, _foldersProperty, true, true, true, true);
 
-            _reorderableList.onChangedCallback += (list) => OnRulesetChange();
+            _reorderableList.drawHeaderCallback = rect => { if (_listLabel != null) EditorGUI.LabelField(rect, _listLabel); };
+            _reorderableList.drawElementCallback = (rect, index, active, focused) =>
+            {
+                var element = _foldersProperty.GetArrayElementAtIndex(index);
+                EditorGUI.PropertyField(rect, element, GUIContent.none, true);
+            };
+            _reorderableList.elementHeightCallback = index =>
+                EditorGUI.GetPropertyHeight(_foldersProperty.GetArrayElementAtIndex(index));
+            _reorderableList.headerHeight = 0f;
+            _reorderableList.onChangedCallback += list => OnRulesetChange();
 
             // ReSharper disable once DelegateSubtraction
             Undo.undoRedoPerformed -= OnRulesetChange;
@@ -203,10 +205,9 @@ namespace Borodar.RainbowFolders
 
             _foldersProperty.serializedObject.ApplyModifiedProperties();
 
-            _reorderableList.canAdd = true;
+            _reorderableList.displayAdd = true;
             _reorderableList.headerHeight = 0f;
-            _reorderableList.label.text = string.Empty;
-            _reorderableList.paginate = true;
+            _listLabel.text = string.Empty;
         }
 
         private void ApplyHiddenFlagsByAsset()
@@ -236,10 +237,9 @@ namespace Borodar.RainbowFolders
                 rule.IsHidden = !match;
             }
 
-            _reorderableList.canAdd = false;
+            _reorderableList.displayAdd = false;
             _reorderableList.headerHeight = 18f;
-            _reorderableList.label.text = SEARCH_RESULTS_TITLE;
-            _reorderableList.paginate = false;
+            _listLabel.text = SEARCH_RESULTS_TITLE;
         }
 
         private void ApplyHiddenFlagsByKey()
@@ -269,10 +269,9 @@ namespace Borodar.RainbowFolders
 
             _foldersProperty.serializedObject.ApplyModifiedProperties();
 
-            _reorderableList.canAdd = false;
+            _reorderableList.displayAdd = false;
             _reorderableList.headerHeight = 18f;
-            _reorderableList.label = new GUIContent(SEARCH_RESULTS_TITLE);
-            _reorderableList.paginate = false;
+            _listLabel = new GUIContent(SEARCH_RESULTS_TITLE);
         }
 
         private Regex MakeRegexFromQuery()
