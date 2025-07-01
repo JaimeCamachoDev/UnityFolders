@@ -2,10 +2,10 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-using static Borodar.RainbowFolders.ColorHelper;
-using KeyType = Borodar.RainbowFolders.ProjectRule.KeyType;
+using static UnityFolders.ColorHelper;
+using KeyType = UnityFolders.ProjectRule.KeyType;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     public class ProjectPopupWindow : DraggablePopupWindow
     {

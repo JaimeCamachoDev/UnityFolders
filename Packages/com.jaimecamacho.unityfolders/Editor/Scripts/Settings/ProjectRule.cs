@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     [Serializable]
     public class ProjectRule

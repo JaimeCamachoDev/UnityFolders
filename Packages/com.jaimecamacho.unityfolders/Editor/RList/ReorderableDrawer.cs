@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.RainbowFolders.RList {
+namespace UnityFolders.RList {
 
 	[CustomPropertyDrawer(typeof(ReorderableAttribute))]
 	public class ReorderableDrawer : PropertyDrawer {

@@ -4,9 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using static Borodar.RainbowFolders.ProjectWindowAdapter.ViewMode;
+using static UnityFolders.ProjectWindowAdapter.ViewMode;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     [InitializeOnLoad]
     public class RainbowFoldersGUI

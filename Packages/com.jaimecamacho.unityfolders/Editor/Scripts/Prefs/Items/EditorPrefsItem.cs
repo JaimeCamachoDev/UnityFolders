@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     public abstract class EditorPrefsItem<T>
     {

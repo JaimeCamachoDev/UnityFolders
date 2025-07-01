@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     [SuppressMessage("ReSharper", "ConvertIfStatementToNullCoalescingExpression")]
     public static class ColorHelper

@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     public static class ProjectWindowAdapter
     {

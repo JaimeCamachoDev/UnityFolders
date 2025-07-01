@@ -1,4 +1,4 @@
-﻿namespace Borodar.RainbowFolders
+﻿namespace UnityFolders
 {
     public enum ProjectEditorTexture
     {

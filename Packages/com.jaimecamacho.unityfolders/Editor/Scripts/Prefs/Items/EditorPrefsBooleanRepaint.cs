@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     internal class EditorPrefsBooleanRepaint : EditorPrefsBoolean
     {

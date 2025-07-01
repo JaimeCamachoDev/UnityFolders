@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     public class ProjectIconsPopup : ProjectSelectionPopup<ProjectIcon>
     {

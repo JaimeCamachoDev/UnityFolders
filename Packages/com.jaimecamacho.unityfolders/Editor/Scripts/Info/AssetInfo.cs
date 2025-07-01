@@ -1,10 +1,9 @@
-﻿namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     internal static class AssetInfo
     {
-        public const string STORE_ID = "143526";
-        public const string NAME = "Rainbow Folders";
-        public const string VERSION = "2.4.2";
-        public const string HELP_URL = "http://www.borodar.com/stuff/rainbowfolders/docs/quickstart_v" + VERSION + ".pdf";
+        public const string NAME = "UnityFolders";
+        public const string VERSION = "1.0.0";
+        public const string HELP_URL = "https://github.com/JaimeCamachoDev/UnityFolders/blob/main/README.md";
     }
 }

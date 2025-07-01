@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Borodar.RainbowFolders
+namespace UnityFolders
 {
     internal static class RFLogger
     {
