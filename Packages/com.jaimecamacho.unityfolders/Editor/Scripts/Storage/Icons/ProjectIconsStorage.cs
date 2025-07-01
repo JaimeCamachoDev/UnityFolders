@@ -18,8 +18,7 @@ namespace Borodar.RainbowFolders
         static ProjectIconsStorage()
         {
             ICON_TEXTURES = new Dictionary<ProjectIcon, Tuple<Texture2D, Texture2D>>();
-            ICON_STRINGS = (EditorGUIUtility.isProSkin) ? ProjectIconsArchivePro.GetDict()
-                : ProjectIconsArchiveFree.GetDict();
+            ICON_STRINGS = ProjectIconsArchive.GetDict(EditorGUIUtility.isProSkin);
         }
 
         //---------------------------------------------------------------------
