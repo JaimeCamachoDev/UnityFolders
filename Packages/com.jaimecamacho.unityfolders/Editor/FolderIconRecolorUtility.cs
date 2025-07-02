@@ -10,7 +10,7 @@ namespace JaimeCamachoDev.UnityFolders
         private Texture2D previewTexture;
         private Color tint = Color.white;
         private string saveName = "NewIcon";
-        private string savePath = "Assets/UnityFolders/Generated/";
+        private string savePath = "Packages/com.jaimecamacho.unityfolders/Folders/";
 
         [MenuItem("Tools/JaimeCamachoDev/UnityFolders/Generate Colored Icon")]
         [MenuItem("Assets/JaimeCamachoDev/UnityFolders/Generate Colored Icon")]
@@ -51,8 +51,10 @@ namespace JaimeCamachoDev.UnityFolders
 
             if (GUILayout.Button("Save Texture") && previewTexture != null)
             {
-                SaveTextureAsPNG(previewTexture, Path.Combine(savePath, saveName + ".png"));
+                string fullPath = Path.Combine(savePath, saveName + ".png");
+                SaveTextureAsPNG(previewTexture, fullPath);
                 AssetDatabase.Refresh();
+                SetTextureImporterSettings(fullPath);
             }
         }
 
@@ -80,6 +82,18 @@ namespace JaimeCamachoDev.UnityFolders
 
             byte[] pngData = texture.EncodeToPNG();
             File.WriteAllBytes(fullPath, pngData);
+        }
+
+        private void SetTextureImporterSettings(string path)
+        {
+            TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (importer != null)
+            {
+                importer.textureType = TextureImporterType.GUI;
+                importer.maxTextureSize = 256;
+                importer.isReadable = true;
+                importer.SaveAndReimport();
+            }
         }
     }
 }
