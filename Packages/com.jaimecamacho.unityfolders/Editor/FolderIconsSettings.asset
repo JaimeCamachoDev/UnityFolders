@@ -15,11 +15,11 @@ MonoBehaviour:
   rules:
   - ruleName: holiii
     matchType: 0
-    match: holiii
-    iconSmall: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
-    iconLarge: {fileID: 10305, guid: 0000000000000000f000000000000000, type: 0}
-    overlayIcon: {fileID: 0}
-    background: {r: 1, g: 0, b: 0, a: 0.38431373}
+    match: SCRIPT
+    iconSmall: {fileID: 2800000, guid: fece615cb4eb6be43803d0d74f524085, type: 3}
+    iconLarge: {fileID: 2800000, guid: 169ea14e232d1904b91da78098f35d8e, type: 3}
+    overlayIcon: {fileID: 2800000, guid: 8f1a87c0aab1f854fa887deca1654b60, type: 3}
+    background: {r: 1, g: 0.4, b: 0.84705883, a: 0.2}
     enabled: 0
     eraseDefault: 1
     priority: 1
