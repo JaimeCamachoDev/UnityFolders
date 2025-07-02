@@ -31,13 +31,18 @@ namespace JaimeCamachoDev.UnityFolders
                 if (GUILayout.Button("Apply Color & Generate Icons"))
                 {
                     if (rule.iconSmall != null)
-                        rule.iconSmall = RecolorAndSave(rule.iconSmall, rule.background, rule.match + "_Small");
+                    {
+                        string smallPath = GenerateSafePath(rule.match + "_Small");
+                        rule.iconSmall = RecolorAndSave(rule.iconSmall, rule.background, smallPath);
+                    }
 
                     if (rule.iconLarge != null)
-                        rule.iconLarge = RecolorAndSave(rule.iconLarge, rule.background, rule.match + "_Large");
+                    {
+                        string largePath = GenerateSafePath(rule.match + "_Large");
+                        rule.iconLarge = RecolorAndSave(rule.iconLarge, rule.background, largePath);
+                    }
 
                     AssetDatabase.SaveAssets();
-                    AssetDatabase.Refresh();
                 }
 
                 EditorGUILayout.EndVertical();
@@ -48,7 +53,12 @@ namespace JaimeCamachoDev.UnityFolders
                 EditorUtility.SetDirty(settings);
         }
 
-        private Texture2D RecolorAndSave(Texture2D original, Color tint, string name)
+        private string GenerateSafePath(string name)
+        {
+            return $"Packages/com.jaimecamacho.unityfolders/Folders/{name}_tint.png";
+        }
+
+        private Texture2D RecolorAndSave(Texture2D original, Color tint, string path)
         {
             if (!original.isReadable)
             {
@@ -69,7 +79,6 @@ namespace JaimeCamachoDev.UnityFolders
             newTex.Apply();
 
             byte[] pngData = newTex.EncodeToPNG();
-            string path = $"Packages/com.jaimecamacho.unityfolders/Folders/{name}.png";
             string dir = Path.GetDirectoryName(path);
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
