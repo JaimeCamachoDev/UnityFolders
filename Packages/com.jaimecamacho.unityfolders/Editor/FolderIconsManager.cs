@@ -104,10 +104,7 @@ public static class FolderIconsManager
                 GUI.color = Color.white;
             }
 
-            // Icono ajustado según columna
-
-            bool isSelected = Selection.activeObject != null && AssetDatabase.GetAssetPath(Selection.activeObject) == path;
-
+            // Dibujo del icono base
             if (icon != null)
             {
                 Rect iconRect;
@@ -115,7 +112,7 @@ public static class FolderIconsManager
                 {
                     float size = selectionRect.height - EditorGUIUtility.singleLineHeight;
                     float iconX = selectionRect.x + (selectionRect.width - size) * 0.5f;
-                    iconRect = new Rect(iconX - 3, selectionRect.y -1 , size + 6, size + 6);
+                    iconRect = new Rect(iconX - 3, selectionRect.y - 1, size + 6, size + 6);
                 }
                 else if (isInLeftColumn)
                 {
@@ -123,23 +120,27 @@ public static class FolderIconsManager
                 }
                 else
                 {
-                    iconRect = new Rect(selectionRect.x, selectionRect.y - 2, selectionRect.height + 3, selectionRect.height + 3 );
+                    iconRect = new Rect(selectionRect.x, selectionRect.y - 2, selectionRect.height + 3, selectionRect.height + 3);
                 }
 
-                // Truco para ocultar el ícono base de Unity sin cuadro blanco
                 Color prevColor = GUI.color;
                 GUI.color = new Color(0.2196f, 0.2196f, 0.2196f, 0f);
                 GUI.DrawTexture(iconRect, Texture2D.whiteTexture);
                 GUI.color = prevColor;
 
-                // 🔵 Atenuar el icono si está seleccionada la carpeta
-                prevColor = GUI.color;
-                //if (isSelected)
-                //    GUI.color = new Color(1f, 1f, 1f, 0.5f);  // Semitransparente
-
                 GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit, true);
-                GUI.color = prevColor;
+
+                // 🟡 Dibujo del overlay centrado
+                if (rule.overlayIcon != null)
+                {
+                    float overlaySize = iconRect.width * 0.5f;
+                    float overlayX = iconRect.x + (iconRect.width - overlaySize) * 0.5f;
+                    float overlayY = iconRect.y + (iconRect.height - overlaySize) * 0.5f;
+                    Rect overlayRect = new Rect(overlayX, overlayY, overlaySize, overlaySize);
+                    GUI.DrawTexture(overlayRect, rule.overlayIcon, ScaleMode.ScaleToFit, true);
+                }
             }
+
             break;
         }
     }
