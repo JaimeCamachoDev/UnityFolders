@@ -28,7 +28,7 @@ MonoBehaviour:
     match: holiii
     iconSmall: {fileID: 2800000, guid: cad1b646e356bae4aa41152869767bde, type: 3}
     iconLarge: {fileID: 2800000, guid: 65f6a4d4723b7b146974cfeda1cbff2a, type: 3}
-    overlayIcon: {fileID: 2800000, guid: 5f549fe65acb352449e6a4c7ba38782f, type: 3}
+    overlayIcon: {fileID: 2800000, guid: a57aa73100f6b724d9186a98d8508f82, type: 3}
     background: {r: 0, g: 0.9539039, b: 1, a: 0.25}
     enabled: 1
     eraseDefault: 1
@@ -38,8 +38,8 @@ MonoBehaviour:
     match: PREFAB
     iconSmall: {fileID: 2800000, guid: 3b95974854848614fb5e84534038ba08, type: 3}
     iconLarge: {fileID: 2800000, guid: f684bac73e130c44b8ac1438bf761bc0, type: 3}
-    overlayIcon: {fileID: 2800000, guid: 098224f5e2796ac4389217c9d106c483, type: 3}
-    background: {r: 1, g: 0, b: 0.40021467, a: 0.38431373}
+    overlayIcon: {fileID: 2800000, guid: 8f1a87c0aab1f854fa887deca1654b60, type: 3}
+    background: {r: 1, g: 0.40000004, b: 0.8470589, a: 0.2}
     enabled: 1
     eraseDefault: 1
     priority: 2

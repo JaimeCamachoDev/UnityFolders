@@ -1,92 +1,42 @@
+using System.IO;
 using UnityEditor;
 using UnityEngine;
-using System.IO;
 
 namespace JaimeCamachoDev.UnityFolders
 {
-    public class FolderIconRecolorUtility : EditorWindow
+    public static class FolderIconRecolorUtility
     {
-        private Texture2D originalTexture;
-        private Texture2D previewTexture;
-        private Color tint = Color.white;
-        private string saveName = "NewIcon";
-        private string savePath = "Packages/com.jaimecamacho.unityfolders/Folders/";
-
-        [MenuItem("Tools/JaimeCamachoDev/UnityFolders/Generate Colored Icon")]
-        [MenuItem("Assets/JaimeCamachoDev/UnityFolders/Generate Colored Icon")]
-        private static void OpenWindow()
+        public static Texture2D RecolorAndSave(Texture2D original, Color tint, string name)
         {
-            GetWindow<FolderIconRecolorUtility>("Generate Icon");
-        }
-
-        private void OnGUI()
-        {
-            EditorGUILayout.LabelField("Texture Colour Replacement", EditorStyles.boldLabel);
-            originalTexture = (Texture2D)EditorGUILayout.ObjectField("Original Texture", originalTexture, typeof(Texture2D), false);
-
-            if (originalTexture != null && !originalTexture.isReadable)
+            if (!original.isReadable)
             {
-                EditorGUILayout.HelpBox("⚠️ This texture is not readable. Enable 'Read/Write' in the Import Settings.", MessageType.Warning);
-                return;
+                Debug.LogWarning($"Texture '{original.name}' is not readable.");
+                return original;
             }
 
-            tint = EditorGUILayout.ColorField("Replacement Colour", tint);
-
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Preview", EditorStyles.boldLabel);
-            if (previewTexture != null)
-            {
-                GUILayout.Label(previewTexture, GUILayout.Width(64), GUILayout.Height(64));
-            }
-
-            if (GUILayout.Button("Generate"))
-            {
-                previewTexture = GenerateTintedTexture(originalTexture, tint);
-            }
-
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Save Created Texture", EditorStyles.boldLabel);
-            saveName = EditorGUILayout.TextField("Texture Name", saveName);
-            savePath = EditorGUILayout.TextField("Save Path", savePath);
-
-            if (GUILayout.Button("Save Texture") && previewTexture != null)
-            {
-                string fullPath = Path.Combine(savePath, saveName + ".png");
-                SaveTextureAsPNG(previewTexture, fullPath);
-                AssetDatabase.Refresh();
-                SetTextureImporterSettings(fullPath);
-            }
-        }
-
-        private Texture2D GenerateTintedTexture(Texture2D source, Color tint)
-        {
-            Texture2D newTex = new Texture2D(source.width, source.height);
-            Color[] pixels = source.GetPixels();
+            Texture2D newTex = new Texture2D(original.width, original.height);
+            Color[] pixels = original.GetPixels();
 
             for (int i = 0; i < pixels.Length; i++)
             {
-                Color original = pixels[i];
-                pixels[i] = new Color(original.r * tint.r, original.g * tint.g, original.b * tint.b, original.a);
+                Color baseColor = pixels[i];
+                pixels[i] = new Color(baseColor.r * tint.r, baseColor.g * tint.g, baseColor.b * tint.b, baseColor.a);
             }
 
             newTex.SetPixels(pixels);
             newTex.Apply();
-            return newTex;
-        }
 
-        private void SaveTextureAsPNG(Texture2D texture, string fullPath)
-        {
-            string directory = Path.GetDirectoryName(fullPath);
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            byte[] pngData = newTex.EncodeToPNG();
 
-            byte[] pngData = texture.EncodeToPNG();
-            File.WriteAllBytes(fullPath, pngData);
-        }
+            string path = $"Packages/com.jaimecamacho.unityfolders/Folders/{name}_tint.png";
+            string dir = Path.GetDirectoryName(path);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
 
-        private void SetTextureImporterSettings(string path)
-        {
-            TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            File.WriteAllBytes(path, pngData);
+
+            AssetDatabase.ImportAsset(path);
+            TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(path);
             if (importer != null)
             {
                 importer.textureType = TextureImporterType.GUI;
@@ -94,6 +44,8 @@ namespace JaimeCamachoDev.UnityFolders
                 importer.isReadable = true;
                 importer.SaveAndReimport();
             }
+
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
         }
     }
 }
