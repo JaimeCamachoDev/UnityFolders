@@ -13,22 +13,12 @@ MonoBehaviour:
   m_Name: FolderIconsSettings
   m_EditorClassIdentifier: 
   rules:
-  - ruleName: holiii
-    matchType: 0
-    match: SCRIPT
-    iconSmall: {fileID: 2800000, guid: fece615cb4eb6be43803d0d74f524085, type: 3}
-    iconLarge: {fileID: 2800000, guid: 169ea14e232d1904b91da78098f35d8e, type: 3}
-    overlayIcon: {fileID: 2800000, guid: 8f1a87c0aab1f854fa887deca1654b60, type: 3}
-    background: {r: 1, g: 0.4, b: 0.84705883, a: 0.2}
-    enabled: 0
-    eraseDefault: 1
-    priority: 1
   - ruleName: holii0
     matchType: 0
     match: holiii
     iconSmall: {fileID: 2800000, guid: cad1b646e356bae4aa41152869767bde, type: 3}
     iconLarge: {fileID: 2800000, guid: 65f6a4d4723b7b146974cfeda1cbff2a, type: 3}
-    overlayIcon: {fileID: 2800000, guid: a57aa73100f6b724d9186a98d8508f82, type: 3}
+    overlayIcon: {fileID: 2800000, guid: 3e338a37871beba4793e43d14ec7d538, type: 3}
     background: {r: 0, g: 0.9539039, b: 1, a: 0.25}
     enabled: 1
     eraseDefault: 1
@@ -40,6 +30,16 @@ MonoBehaviour:
     iconLarge: {fileID: 2800000, guid: f684bac73e130c44b8ac1438bf761bc0, type: 3}
     overlayIcon: {fileID: 2800000, guid: 8f1a87c0aab1f854fa887deca1654b60, type: 3}
     background: {r: 1, g: 0.40000004, b: 0.8470589, a: 0.2}
+    enabled: 1
+    eraseDefault: 1
+    priority: 2
+  - ruleName: holii0
+    matchType: 0
+    match: SCRIPT
+    iconSmall: {fileID: 2800000, guid: fece615cb4eb6be43803d0d74f524085, type: 3}
+    iconLarge: {fileID: 2800000, guid: 169ea14e232d1904b91da78098f35d8e, type: 3}
+    overlayIcon: {fileID: 0}
+    background: {r: 0.39999998, g: 1, b: 0.5719492, a: 0.2}
     enabled: 1
     eraseDefault: 1
     priority: 2
