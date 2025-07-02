@@ -115,7 +115,7 @@ public static class FolderIconsManager
                 {
                     float size = selectionRect.height - EditorGUIUtility.singleLineHeight;
                     float iconX = selectionRect.x + (selectionRect.width - size) * 0.5f;
-                    iconRect = new Rect(iconX - 1, selectionRect.y, size + 3, size + 3);
+                    iconRect = new Rect(iconX - 2, selectionRect.y, size + 4, size + 4);
                 }
                 else if (isInLeftColumn)
                 {

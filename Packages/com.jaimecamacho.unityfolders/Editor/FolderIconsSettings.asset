@@ -25,18 +25,27 @@ MonoBehaviour:
   - ruleName: holii0
     matchType: 0
     match: holiii
-    iconSmall: {fileID: 10307, guid: 0000000000000000f000000000000000, type: 0}
-    iconLarge: {fileID: 10906, guid: 0000000000000000f000000000000000, type: 0}
-    background: {r: 0.35536385, g: 1, b: 0, a: 0.25}
+    iconSmall: {fileID: 2800000, guid: 23d235af6343195418afafed1a0cc6ab, type: 3}
+    iconLarge: {fileID: 2800000, guid: 23d235af6343195418afafed1a0cc6ab, type: 3}
+    background: {r: 1, g: 0.009225973, b: 0, a: 0.25}
     enabled: 1
     eraseDefault: 1
     priority: 2
   - ruleName: holii0
     matchType: 0
     match: PREFAB
-    iconSmall: {fileID: 10900, guid: 0000000000000000f000000000000000, type: 0}
-    iconLarge: {fileID: 10910, guid: 0000000000000000f000000000000000, type: 0}
+    iconSmall: {fileID: 2800000, guid: 2967691fae9d74242b6425a3a82c6bff, type: 3}
+    iconLarge: {fileID: 2800000, guid: 2967691fae9d74242b6425a3a82c6bff, type: 3}
     background: {r: 0, g: 0.8239019, b: 1, a: 0.38431373}
     enabled: 1
     eraseDefault: 1
     priority: 2
+  - ruleName: Editor
+    matchType: 0
+    match: Editor
+    iconSmall: {fileID: 0}
+    iconLarge: {fileID: 0}
+    background: {r: 1, g: 1, b: 1, a: 0.25}
+    enabled: 1
+    eraseDefault: 1
+    priority: 0
