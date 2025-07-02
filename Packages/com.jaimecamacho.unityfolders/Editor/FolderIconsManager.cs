@@ -1,4 +1,3 @@
-
 using UnityEditor;
 using UnityEngine;
 using System.IO;
@@ -106,6 +105,9 @@ public static class FolderIconsManager
             }
 
             // Icono ajustado según columna
+
+            bool isSelected = Selection.activeObject != null && AssetDatabase.GetAssetPath(Selection.activeObject) == path;
+
             if (icon != null)
             {
                 Rect iconRect;
@@ -126,15 +128,18 @@ public static class FolderIconsManager
 
                 // Truco para ocultar el ícono base de Unity sin cuadro blanco
                 Color prevColor = GUI.color;
-                GUI.color = new Color(0.2196078f, 0.2196078f, 0.2196078f, 1f);
+                GUI.color = new Color(0.2196f, 0.2196f, 0.2196f, 1f);
                 GUI.DrawTexture(iconRect, Texture2D.whiteTexture);
                 GUI.color = prevColor;
-                if (icon != null)
-                {
-                    GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit, true);
-                }
-            }
 
+                // 🔵 Atenuar el icono si está seleccionada la carpeta
+                prevColor = GUI.color;
+                if (isSelected)
+                    GUI.color = new Color(1f, 1f, 1f, 0.5f);  // Semitransparente
+
+                GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit, true);
+                GUI.color = prevColor;
+            }
             break;
         }
     }
