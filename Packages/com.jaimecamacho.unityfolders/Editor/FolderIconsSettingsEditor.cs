@@ -7,12 +7,9 @@ using JaimeCamachoDev.UnityFolders;
 public class FolderIconsSettingsEditor : Editor
 {
     private ReorderableList list;
-    private FolderIconsSettings settings;
 
     private void OnEnable()
     {
-        settings = (FolderIconsSettings)target;
-
         list = new ReorderableList(serializedObject,
                                     serializedObject.FindProperty("rules"),
                                     draggable: true, displayHeader: true,
@@ -46,23 +43,12 @@ public class FolderIconsSettingsEditor : Editor
 
             if (GUI.Button(new Rect(rect.x, y, rect.width, lineHeight), "Apply Color & Generate Icons"))
             {
-                serializedObject.ApplyModifiedProperties();
-
+                var settings = (FolderIconsSettings)target;
                 var rule = settings.rules[index];
                 if (rule.iconSmall != null)
-                {
-                    var newSmall = FolderIconRecolorUtility.RecolorAndSave(rule.iconSmall, rule.background, rule.match + "_Small");
-                    rule.iconSmall = newSmall;
-                }
-
+                    rule.iconSmall = FolderIconRecolorUtility.RecolorAndSave(rule.iconSmall, rule.background, rule.match + "_Small", rule.overlayIcon);
                 if (rule.iconLarge != null)
-                {
-                    var newLarge = FolderIconRecolorUtility.RecolorAndSave(rule.iconLarge, rule.background, rule.match + "_Large");
-                    rule.iconLarge = newLarge;
-                }
-
-                EditorUtility.SetDirty(settings);
-                AssetDatabase.SaveAssets();
+                    rule.iconLarge = FolderIconRecolorUtility.RecolorAndSave(rule.iconLarge, rule.background, rule.match + "_Large", rule.overlayIcon);
             }
         };
     }
