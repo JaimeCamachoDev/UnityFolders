@@ -16,9 +16,9 @@ MonoBehaviour:
   - ruleName: holii0
     matchType: 0
     match: Animation
-    iconSmall: {fileID: 2800000, guid: 83e78d6bb03f68844907d77c8ea199ed, type: 3}
-    iconLarge: {fileID: 2800000, guid: da290e8bedd631b4181da4f368186734, type: 3}
-    overlayIcon: {fileID: 2800000, guid: 95b6950b8d0a47d408c80e1b0deae4b8, type: 3}
+    iconSmall: {fileID: 2800000, guid: 4f583fce51a85e24e8f7f68e0285a7b6, type: 3}
+    iconLarge: {fileID: 2800000, guid: 4f583fce51a85e24e8f7f68e0285a7b6, type: 3}
+    overlayIcon: {fileID: 0}
     background: {r: 0.36695924, g: 0.35933605, b: 0.8962264, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
