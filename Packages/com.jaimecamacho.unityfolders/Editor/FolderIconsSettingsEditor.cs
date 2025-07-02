@@ -1,77 +1,92 @@
-
 using UnityEditor;
 using UnityEngine;
+using System.IO;
 
-[CustomEditor(typeof(FolderIconsSettings))]
-public class FolderIconsSettingsEditor : Editor
+namespace JaimeCamachoDev.UnityFolders
 {
-    private SerializedProperty rules;
-
-    private void OnEnable()
+    [CustomEditor(typeof(FolderIconsSettings))]
+    public class FolderIconsSettingsEditor : Editor
     {
-        rules = serializedObject.FindProperty("rules");
-    }
+        private FolderIconsSettings settings;
 
-    public override void OnInspectorGUI()
-    {
-        serializedObject.Update();
-
-        EditorGUILayout.LabelField("Reglas de Carpetas", EditorStyles.boldLabel);
-
-        for (int i = 0; i < rules.arraySize; i++)
+        public override void OnInspectorGUI()
         {
-            SerializedProperty rule = rules.GetArrayElementAtIndex(i);
-            SerializedProperty name = rule.FindPropertyRelative("match");
-            SerializedProperty type = rule.FindPropertyRelative("matchType");
-            SerializedProperty iconSmall = rule.FindPropertyRelative("iconSmall");
-            SerializedProperty iconLarge = rule.FindPropertyRelative("iconLarge");
-            SerializedProperty background = rule.FindPropertyRelative("background");
-            SerializedProperty enabled = rule.FindPropertyRelative("enabled");
-            SerializedProperty priority = rule.FindPropertyRelative("priority");
+            settings = (FolderIconsSettings)target;
 
-            EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.BeginHorizontal();
-            name.stringValue = EditorGUILayout.TextField(name.stringValue);
-            type.enumValueIndex = (int)(MatchType)EditorGUILayout.EnumPopup((MatchType)type.enumValueIndex);
-            enabled.boolValue = EditorGUILayout.Toggle(enabled.boolValue, GUILayout.Width(20));
-            EditorGUILayout.EndHorizontal();
+            if (settings.rules == null) return;
 
-            iconSmall.objectReferenceValue = EditorGUILayout.ObjectField("Icon Small", iconSmall.objectReferenceValue, typeof(Texture2D), false) as Texture2D;
-            iconLarge.objectReferenceValue = EditorGUILayout.ObjectField("Icon Large", iconLarge.objectReferenceValue, typeof(Texture2D), false) as Texture2D;
-            background.colorValue = EditorGUILayout.ColorField("Background", background.colorValue);
-            priority.intValue = EditorGUILayout.IntField("Priority", priority.intValue);
+            EditorGUILayout.Space();
 
-            // Preview
-            Rect previewRect = GUILayoutUtility.GetRect(64, 20, GUILayout.ExpandWidth(true));
-            DrawPreview(previewRect, background.colorValue, iconSmall.objectReferenceValue as Texture2D, name.stringValue);
+            foreach (var rule in settings.rules)
+            {
+                EditorGUILayout.BeginVertical("box");
+                rule.match = EditorGUILayout.TextField("Match Path", rule.match);
 
-            if (GUILayout.Button("Eliminar esta regla"))
-                rules.DeleteArrayElementAtIndex(i);
+                rule.background = EditorGUILayout.ColorField("Background & Tint", rule.background);
+                rule.iconSmall = (Texture2D)EditorGUILayout.ObjectField("Icon Small", rule.iconSmall, typeof(Texture2D), false);
+                rule.iconLarge = (Texture2D)EditorGUILayout.ObjectField("Icon Large", rule.iconLarge, typeof(Texture2D), false);
 
-            EditorGUILayout.EndVertical();
+                EditorGUILayout.Space();
+
+                if (GUILayout.Button("Apply Color & Generate Icons"))
+                {
+                    if (rule.iconSmall != null)
+                        rule.iconSmall = RecolorAndSave(rule.iconSmall, rule.background, rule.match + "_Small");
+
+                    if (rule.iconLarge != null)
+                        rule.iconLarge = RecolorAndSave(rule.iconLarge, rule.background, rule.match + "_Large");
+
+                    AssetDatabase.SaveAssets();
+                    AssetDatabase.Refresh();
+                }
+
+                EditorGUILayout.EndVertical();
+                EditorGUILayout.Space();
+            }
+
+            if (GUI.changed)
+                EditorUtility.SetDirty(settings);
         }
 
-        if (GUILayout.Button("Añadir nueva regla"))
+        private Texture2D RecolorAndSave(Texture2D original, Color tint, string name)
         {
-            rules.InsertArrayElementAtIndex(rules.arraySize);
+            if (!original.isReadable)
+            {
+                Debug.LogWarning($"Texture '{original.name}' is not readable.");
+                return original;
+            }
+
+            Texture2D newTex = new Texture2D(original.width, original.height);
+            Color[] pixels = original.GetPixels();
+
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                Color baseColor = pixels[i];
+                pixels[i] = new Color(baseColor.r * tint.r, baseColor.g * tint.g, baseColor.b * tint.b, baseColor.a);
+            }
+
+            newTex.SetPixels(pixels);
+            newTex.Apply();
+
+            byte[] pngData = newTex.EncodeToPNG();
+            string path = $"Packages/com.jaimecamacho.unityfolders/Folders/{name}.png";
+            string dir = Path.GetDirectoryName(path);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            File.WriteAllBytes(path, pngData);
+
+            AssetDatabase.ImportAsset(path);
+            TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            if (importer != null)
+            {
+                importer.textureType = TextureImporterType.GUI;
+                importer.maxTextureSize = 256;
+                importer.isReadable = true;
+                importer.SaveAndReimport();
+            }
+
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
         }
-
-        serializedObject.ApplyModifiedProperties();
-    }
-
-    private void DrawPreview(Rect rect, Color background, Texture2D icon, string text)
-    {
-        Color prevColor = GUI.color;
-        GUI.color = background;
-        GUI.DrawTexture(rect, Texture2D.whiteTexture, ScaleMode.StretchToFill);
-        GUI.color = prevColor;
-
-        if (icon != null)
-        {
-            GUI.DrawTexture(new Rect(rect.x, rect.y, rect.height, rect.height), icon, ScaleMode.ScaleToFit, true);
-        }
-
-        Rect labelRect = new Rect(rect.x + rect.height, rect.y, rect.width - rect.height, rect.height);
-        GUI.Label(labelRect, text, EditorStyles.whiteLabel);
     }
 }
