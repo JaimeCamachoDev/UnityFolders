@@ -115,7 +115,7 @@ public static class FolderIconsManager
                 {
                     float size = selectionRect.height - EditorGUIUtility.singleLineHeight;
                     float iconX = selectionRect.x + (selectionRect.width - size) * 0.5f;
-                    iconRect = new Rect(iconX, selectionRect.y, size, size);
+                    iconRect = new Rect(iconX - 1, selectionRect.y, size + 3, size + 3);
                 }
                 else if (isInLeftColumn)
                 {
@@ -123,19 +123,19 @@ public static class FolderIconsManager
                 }
                 else
                 {
-                    iconRect = new Rect(selectionRect.x + 1, selectionRect.y, selectionRect.height, selectionRect.height);
+                    iconRect = new Rect(selectionRect.x, selectionRect.y - 2, selectionRect.height + 3, selectionRect.height + 3 );
                 }
 
                 // Truco para ocultar el ícono base de Unity sin cuadro blanco
                 Color prevColor = GUI.color;
-                GUI.color = new Color(0.2196f, 0.2196f, 0.2196f, 1f);
+                GUI.color = new Color(0.2196f, 0.2196f, 0.2196f, 0f);
                 GUI.DrawTexture(iconRect, Texture2D.whiteTexture);
                 GUI.color = prevColor;
 
                 // 🔵 Atenuar el icono si está seleccionada la carpeta
                 prevColor = GUI.color;
-                if (isSelected)
-                    GUI.color = new Color(1f, 1f, 1f, 0.5f);  // Semitransparente
+                //if (isSelected)
+                //    GUI.color = new Color(1f, 1f, 1f, 0.5f);  // Semitransparente
 
                 GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit, true);
                 GUI.color = prevColor;
