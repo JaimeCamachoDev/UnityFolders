@@ -6,7 +6,12 @@ public class FolderIconsSettings : ScriptableObject
 {
     public List<FolderIconRule> rules = new();
 
-    public bool showPreview = true;
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        FolderIconsManager.LoadSettings();
+    }
+#endif
 }
 
 [Serializable]
