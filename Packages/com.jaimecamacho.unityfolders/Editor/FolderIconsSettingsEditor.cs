@@ -38,7 +38,12 @@ public class FolderIconsSettingsEditor : Editor
             EditorGUI.LabelField(rect, "Folder Icon Rules");
         };
 
-        list.elementHeightCallback = index => EditorGUIUtility.singleLineHeight * 8 + 52;
+        list.elementHeightCallback = index =>
+        {
+            float h = EditorGUIUtility.singleLineHeight + 4;
+            float preview = h * 2.5f;
+            return h * 7 + preview + 8; // fields + button + margin
+        };
 
         list.drawElementCallback = (rect, index, isActive, isFocused) =>
         {
@@ -91,6 +96,9 @@ public class FolderIconsSettingsEditor : Editor
                 if (rule.iconLarge != null)
                     rule.iconLarge = FolderIconRecolorUtility.RecolorAndSave(rule.iconLarge, rule.background, rule.match + "_Large", rule.overlayIcon);
             }
+
+            // Keep height in sync with elementHeightCallback
+            y += lineHeight + 4;
         };
     }
 
