@@ -40,11 +40,11 @@ public class FolderIconsSettingsEditor : Editor
 
         list.elementHeightCallback = index =>
         {
-            float lineHeight = EditorGUIUtility.singleLineHeight + 4;
-            float height = lineHeight * 7;
-            if (((FolderIconsSettings)target).showPreview)
-                height += lineHeight * 2.5f + 4;
-            return height;
+
+            float h = EditorGUIUtility.singleLineHeight + 4;
+            float preview = h * 2.5f;
+            return h * 7 + preview + 8; // fields + button + margin
+
         };
 
         list.drawElementCallback = (rect, index, isActive, isFocused) =>
@@ -131,6 +131,9 @@ public class FolderIconsSettingsEditor : Editor
                 previewSmallProp.objectReferenceValue = iconSmallProp.objectReferenceValue as Texture2D;
                 previewLargeProp.objectReferenceValue = iconLargeProp.objectReferenceValue as Texture2D;
             }
+
+            // Keep height in sync with elementHeightCallback
+            y += lineHeight + 4;
         };
     }
 
