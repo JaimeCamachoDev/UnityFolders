@@ -7,6 +7,7 @@ public class FolderIconsSettings : ScriptableObject
     public List<FolderIconRule> rules = new();
 
 #if UNITY_EDITOR
+    public bool showPreview = true;  // Añadido para la vista previa
     private void OnValidate()
     {
         FolderIconsManager.LoadSettings();
