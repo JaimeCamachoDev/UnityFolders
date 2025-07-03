@@ -130,8 +130,8 @@ public static class FolderIconsManager
 
                 GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit, true);
 
-                // 🟡 Dibujo del overlay centrado solo en iconos grandes
-                if (rule.overlayIcon != null && isGrid)
+                // 🟡 Dibujo del overlay centrado
+                if (rule.overlayIcon != null)
                 {
                     float overlaySize = iconRect.width * 0.5f;
                     float overlayX = iconRect.x + (iconRect.width - overlaySize) * 0.5f;
