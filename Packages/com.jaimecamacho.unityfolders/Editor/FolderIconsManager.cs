@@ -9,6 +9,7 @@ using System.Reflection;
 public static class FolderIconsManager
 {
     static FolderIconsSettings settings;
+    static System.Collections.Generic.List<FolderIconRule> sortedRules;
     static Texture2D gradientTex;
     static Type projectBrowserType;
     static FieldInfo lastInteractedProjectBrowserField;
@@ -29,7 +30,7 @@ public static class FolderIconsManager
         viewModeField = projectBrowserType?.GetField("m_ViewMode", BindingFlags.Instance | BindingFlags.NonPublic);
     }
 
-    static void LoadSettings()
+    internal static void LoadSettings()
     {
         var guid = AssetDatabase.FindAssets("t:FolderIconsSettings").FirstOrDefault();
         if (!string.IsNullOrEmpty(guid))
@@ -37,6 +38,14 @@ public static class FolderIconsManager
             string path = AssetDatabase.GUIDToAssetPath(guid);
             settings = AssetDatabase.LoadAssetAtPath<FolderIconsSettings>(path);
         }
+        UpdateSortedRules();
+    }
+
+    static void UpdateSortedRules()
+    {
+        sortedRules = settings == null
+            ? new System.Collections.Generic.List<FolderIconRule>()
+            : settings.rules.Where(r => r.enabled).OrderByDescending(r => r.priority).ToList();
     }
 
     static void CreateGradient()
@@ -66,14 +75,14 @@ public static class FolderIconsManager
 
     static void DrawCustomIcons(string guid, Rect selectionRect)
     {
-        if (settings == null) return;
+        if (settings == null || sortedRules == null) return;
 
         string path = AssetDatabase.GUIDToAssetPath(guid);
         if (!AssetDatabase.IsValidFolder(path)) return;
 
         string folderName = Path.GetFileName(path);
 
-        foreach (var rule in settings.rules.Where(r => r.enabled).OrderByDescending(r => r.priority))
+        foreach (var rule in sortedRules)
         {
             if (!Match(rule, path, folderName)) continue;
 

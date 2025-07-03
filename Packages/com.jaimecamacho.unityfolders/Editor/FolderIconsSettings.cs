@@ -5,6 +5,13 @@ using UnityEngine;
 public class FolderIconsSettings : ScriptableObject
 {
     public List<FolderIconRule> rules = new();
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        FolderIconsManager.LoadSettings();
+    }
+#endif
 }
 
 [Serializable]
