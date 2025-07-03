@@ -4,11 +4,11 @@ using System.IO;
 
 public static class FolderIconRecolorUtility
 {
-    public static Texture2D RecolorAndSave(Texture2D baseTex, Color tint, string name, Texture2D overlay = null)
+    public static Texture2D Recolor(Texture2D baseTex, Color tint, Texture2D overlay = null)
     {
-        if (!baseTex.isReadable)
+        if (baseTex == null || !baseTex.isReadable)
         {
-            Debug.LogWarning($"Texture '{baseTex.name}' is not readable.");
+            Debug.LogWarning($"Texture '{baseTex?.name}' is not readable.");
             return baseTex;
         }
 
@@ -42,6 +42,13 @@ public static class FolderIconRecolorUtility
         }
 
         newTex.Apply();
+        return newTex;
+    }
+
+    public static Texture2D RecolorAndSave(Texture2D baseTex, Color tint, string name, Texture2D overlay = null)
+    {
+        var newTex = Recolor(baseTex, tint, overlay);
+        if (newTex == null) return baseTex;
 
         byte[] pngData = newTex.EncodeToPNG();
         string path = $"Packages/com.jaimecamacho.unityfolders/Folders/{name}_tint.png";
