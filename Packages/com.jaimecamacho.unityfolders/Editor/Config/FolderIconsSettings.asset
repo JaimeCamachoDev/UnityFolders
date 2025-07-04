@@ -16,9 +16,11 @@ MonoBehaviour:
   - ruleName: holii0
     matchType: 0
     match: Animation
-    iconSmall: {fileID: 2800000, guid: 4f583fce51a85e24e8f7f68e0285a7b6, type: 3}
-    iconLarge: {fileID: 2800000, guid: 4f583fce51a85e24e8f7f68e0285a7b6, type: 3}
+    iconSmall: {fileID: 2800000, guid: 384f4711f55709b4281df5b08a9c31af, type: 3}
+    iconLarge: {fileID: 2800000, guid: 78496293b6950e64995afae0dbbf0c94, type: 3}
     overlayIcon: {fileID: 0}
+    previewSmall: {fileID: 2800000, guid: 384f4711f55709b4281df5b08a9c31af, type: 3}
+    previewLarge: {fileID: 2800000, guid: 78496293b6950e64995afae0dbbf0c94, type: 3}
     background: {r: 0.36695924, g: 0.35933605, b: 0.8962264, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -26,9 +28,11 @@ MonoBehaviour:
   - ruleName: holii0
     matchType: 0
     match: Audio
-    iconSmall: {fileID: 2800000, guid: 671d86439b60e1748820ceddb39f0030, type: 3}
-    iconLarge: {fileID: 2800000, guid: 0940680bce59c3c4082c7f26fbaf1caf, type: 3}
+    iconSmall: {fileID: 2800000, guid: 619dd48408486684a835939fcef451d0, type: 3}
+    iconLarge: {fileID: 2800000, guid: 20b6cce58475b19419072baee709d8ac, type: 3}
     overlayIcon: {fileID: 2800000, guid: 96c8504ba8d9ed54e9ea8e94ac3f7680, type: 3}
+    previewSmall: {fileID: 2800000, guid: 619dd48408486684a835939fcef451d0, type: 3}
+    previewLarge: {fileID: 2800000, guid: 20b6cce58475b19419072baee709d8ac, type: 3}
     background: {r: 0.1490196, g: 0.5803899, b: 1, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -36,9 +40,11 @@ MonoBehaviour:
   - ruleName: holii0
     matchType: 0
     match: Material
-    iconSmall: {fileID: 2800000, guid: f600b942620f9bc4f8e0fd4c6c730cdf, type: 3}
-    iconLarge: {fileID: 2800000, guid: 5b26c639a044f0948880592ee62f2411, type: 3}
+    iconSmall: {fileID: 2800000, guid: 1fbec0b0a9a516343b43c87ad31c783c, type: 3}
+    iconLarge: {fileID: 2800000, guid: a661ee40871d5c549b670effb90d6861, type: 3}
     overlayIcon: {fileID: 2800000, guid: 8415f9789be67ba4fa10561dd058a45e, type: 3}
+    previewSmall: {fileID: 2800000, guid: 1fbec0b0a9a516343b43c87ad31c783c, type: 3}
+    previewLarge: {fileID: 2800000, guid: a661ee40871d5c549b670effb90d6861, type: 3}
     background: {r: 0.38823533, g: 0.8862745, b: 0.80073756, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -46,9 +52,11 @@ MonoBehaviour:
   - ruleName: holii0
     matchType: 0
     match: Mesh
-    iconSmall: {fileID: 2800000, guid: 2d9bd9789fc8dae40934ccec94278b30, type: 3}
-    iconLarge: {fileID: 2800000, guid: 99eafc66877c4844d98c0fb7035960d7, type: 3}
-    overlayIcon: {fileID: 2800000, guid: 8bb4c947e716e5145866722821d3b64e, type: 3}
+    iconSmall: {fileID: 2800000, guid: 306e4f44225bc0043bc05ec20ceab9df, type: 3}
+    iconLarge: {fileID: 2800000, guid: 20d43ca62a984bf4198a0b0bbdf8fe3c, type: 3}
+    overlayIcon: {fileID: 0}
+    previewSmall: {fileID: 2800000, guid: 306e4f44225bc0043bc05ec20ceab9df, type: 3}
+    previewLarge: {fileID: 2800000, guid: 20d43ca62a984bf4198a0b0bbdf8fe3c, type: 3}
     background: {r: 0.5426914, g: 0.9254902, b: 0.40392154, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -56,9 +64,11 @@ MonoBehaviour:
   - ruleName: holii0
     matchType: 0
     match: Prefab
-    iconSmall: {fileID: 2800000, guid: 3b95974854848614fb5e84534038ba08, type: 3}
-    iconLarge: {fileID: 2800000, guid: f684bac73e130c44b8ac1438bf761bc0, type: 3}
+    iconSmall: {fileID: 2800000, guid: fb5188091c8cbf448977632a2df7bf7d, type: 3}
+    iconLarge: {fileID: 2800000, guid: dc2a56600eb35584cb13c605e1dd1c6f, type: 3}
     overlayIcon: {fileID: 2800000, guid: bd2507564dbf8424b9dce9572d7f108b, type: 3}
+    previewSmall: {fileID: 2800000, guid: fb5188091c8cbf448977632a2df7bf7d, type: 3}
+    previewLarge: {fileID: 2800000, guid: dc2a56600eb35584cb13c605e1dd1c6f, type: 3}
     background: {r: 0.95578957, g: 0.9607843, b: 0.37647057, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -66,9 +76,11 @@ MonoBehaviour:
   - ruleName: holii0
     matchType: 0
     match: Script
-    iconSmall: {fileID: 2800000, guid: fece615cb4eb6be43803d0d74f524085, type: 3}
-    iconLarge: {fileID: 2800000, guid: 169ea14e232d1904b91da78098f35d8e, type: 3}
-    overlayIcon: {fileID: 2800000, guid: 8f1a87c0aab1f854fa887deca1654b60, type: 3}
+    iconSmall: {fileID: 2800000, guid: ac08ddd2da9dfb949af757f65d081b4f, type: 3}
+    iconLarge: {fileID: 2800000, guid: cb3f64fedbec84347956ba68b009f061, type: 3}
+    overlayIcon: {fileID: 0}
+    previewSmall: {fileID: 2800000, guid: ac08ddd2da9dfb949af757f65d081b4f, type: 3}
+    previewLarge: {fileID: 2800000, guid: cb3f64fedbec84347956ba68b009f061, type: 3}
     background: {r: 0.85882354, g: 0.6131161, b: 0.24705881, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -76,9 +88,11 @@ MonoBehaviour:
   - ruleName: holii0
     matchType: 0
     match: Shader
-    iconSmall: {fileID: 2800000, guid: ab9cea580b2a9de40b7c5126756ce554, type: 3}
-    iconLarge: {fileID: 2800000, guid: abb6ed966873dae40bb2e0599b209d02, type: 3}
-    overlayIcon: {fileID: 2800000, guid: 098224f5e2796ac4389217c9d106c483, type: 3}
+    iconSmall: {fileID: 2800000, guid: 360cc34802588104aa0519adcdf25c0f, type: 3}
+    iconLarge: {fileID: 2800000, guid: bded6eeb8cdac7643abe5958fbb8ac0f, type: 3}
+    overlayIcon: {fileID: 0}
+    previewSmall: {fileID: 0}
+    previewLarge: {fileID: 0}
     background: {r: 0.8867924, g: 0.4308473, b: 0.51635396, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -86,9 +100,11 @@ MonoBehaviour:
   - ruleName: holii0
     matchType: 0
     match: VFX
-    iconSmall: {fileID: 2800000, guid: c55c30cf2f118244d85b2e4cc60e58f5, type: 3}
-    iconLarge: {fileID: 2800000, guid: c9bb88cb40ec5024e828fc6c20b2d225, type: 3}
-    overlayIcon: {fileID: 2800000, guid: 522b7a5e03648e54587006d52e63a530, type: 3}
+    iconSmall: {fileID: 2800000, guid: c4118dc345f4e374a95e1486fca67e9f, type: 3}
+    iconLarge: {fileID: 2800000, guid: 9233b5dbcd77c1c4e9df97eb879ab4a5, type: 3}
+    overlayIcon: {fileID: 0}
+    previewSmall: {fileID: 2800000, guid: c4118dc345f4e374a95e1486fca67e9f, type: 3}
+    previewLarge: {fileID: 2800000, guid: 9233b5dbcd77c1c4e9df97eb879ab4a5, type: 3}
     background: {r: 0.71922296, g: 0.44918123, b: 0.9245283, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -99,6 +115,8 @@ MonoBehaviour:
     iconSmall: {fileID: 2800000, guid: 23f4600b2dd93cf458cba39eb854f006, type: 3}
     iconLarge: {fileID: 2800000, guid: 625822bc38ddb7c4cabb037ec7279df2, type: 3}
     overlayIcon: {fileID: 2800000, guid: 091964ffe51f0f64a8deb76c08cc5205, type: 3}
+    previewSmall: {fileID: 0}
+    previewLarge: {fileID: 0}
     background: {r: 0.08235294, g: 0.39607844, b: 0.7529412, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -109,6 +127,8 @@ MonoBehaviour:
     iconSmall: {fileID: 2800000, guid: 126d7bc34592a514680f86e5d86b19ab, type: 3}
     iconLarge: {fileID: 2800000, guid: db45eed910163b84ca2ca317d4a98625, type: 3}
     overlayIcon: {fileID: 2800000, guid: 9d757f0792521c44dbbecb9bbbb88a72, type: 3}
+    previewSmall: {fileID: 0}
+    previewLarge: {fileID: 0}
     background: {r: 0.18039216, g: 0.49019608, b: 0.19607843, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -119,6 +139,8 @@ MonoBehaviour:
     iconSmall: {fileID: 2800000, guid: 4af5c1f8490953b4895d97f5191c1de9, type: 3}
     iconLarge: {fileID: 2800000, guid: 5fff6c0a211c69c4b960445d4723f143, type: 3}
     overlayIcon: {fileID: 2800000, guid: edfd475806c51234eab645ab587bbee0, type: 3}
+    previewSmall: {fileID: 0}
+    previewLarge: {fileID: 0}
     background: {r: 0.61960787, g: 0.61960787, b: 0.61960787, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -129,6 +151,8 @@ MonoBehaviour:
     iconSmall: {fileID: 2800000, guid: 4e97b87ae0b1f3d4f831ca54f3cbdd0a, type: 3}
     iconLarge: {fileID: 2800000, guid: 54099e5916ba13c4cafec51b1441295e, type: 3}
     overlayIcon: {fileID: 2800000, guid: 64a19eb326f4a894e836bd65dfdaf96c, type: 3}
+    previewSmall: {fileID: 0}
+    previewLarge: {fileID: 0}
     background: {r: 0.8773585, g: 0.86101556, b: 0, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
@@ -139,7 +163,10 @@ MonoBehaviour:
     iconSmall: {fileID: 2800000, guid: f6a96204865c75e4a9012898c5e29d9a, type: 3}
     iconLarge: {fileID: 2800000, guid: cd5276cf71c3ece47baf0799868e1e42, type: 3}
     overlayIcon: {fileID: 2800000, guid: 00e459e82c1df1445838d8171550bc1b, type: 3}
+    previewSmall: {fileID: 0}
+    previewLarge: {fileID: 0}
     background: {r: 0.6313726, g: 0.53333336, b: 0.49803922, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
     priority: 2
+  showPreview: 1
