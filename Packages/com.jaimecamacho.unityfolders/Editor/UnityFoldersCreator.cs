@@ -10,7 +10,14 @@ public static class UnityFoldersCreator
     {
         string folderPath = GetSelectedPathOrFallback();
 
-        string mainFolderName = "New Folder";
+        // Abrir ventana de input directamente
+        string mainFolderName = FolderDialogUtility.DisplayDialogInput("Nombre de la Carpeta", "Introduce el nombre de la carpeta principal:", "New Folder");
+        if (string.IsNullOrEmpty(mainFolderName))
+        {
+            Debug.Log("Creación de carpetas cancelada.");
+            return;
+        }
+
         string uniqueFolderPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, mainFolderName));
         AssetDatabase.CreateFolder(folderPath, Path.GetFileName(uniqueFolderPath));
         AssetDatabase.Refresh();
@@ -23,13 +30,13 @@ public static class UnityFoldersCreator
     {
         string[] subfolders = new string[]
         {
-            "Animations",
+            "Animation",
             "Audio",
-            "Materials",
-            "Meshes",
-            "Prefabs",
-            "Scripts",
-            "Shaders",
+            "Material",
+            "Mesh",
+            "Prefab",
+            "Script",
+            "Shader",
             "VFX"
         };
 
@@ -55,5 +62,57 @@ public static class UnityFoldersCreator
             }
         }
         return path;
+    }
+}
+
+public static class FolderDialogUtility
+{
+    public static string DisplayDialogInput(string title, string message, string defaultText)
+    {
+        return InputDialog.Show(title, message, defaultText);
+    }
+}
+
+public class InputDialog : EditorWindow
+{
+    private static string input = "";
+    private static string result = null;
+    private static string message;
+    private static string title;
+    private static string defaultText;
+
+    public static string Show(string title, string message, string defaultText)
+    {
+        InputDialog.title = title;
+        InputDialog.message = message;
+        InputDialog.defaultText = defaultText;
+        input = defaultText;
+
+        var window = ScriptableObject.CreateInstance<InputDialog>();
+        window.titleContent = new GUIContent(title);
+        window.position = new Rect(Screen.width / 2, Screen.height / 2, 400, 120);
+        window.ShowModal();
+        return result;
+    }
+
+    private void OnGUI()
+    {
+        EditorGUILayout.LabelField(message, EditorStyles.wordWrappedLabel);
+        GUILayout.Space(10);
+        input = EditorGUILayout.TextField("Nombre:", input);
+        GUILayout.Space(20);
+
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Aceptar"))
+        {
+            result = input;
+            Close();
+        }
+        if (GUILayout.Button("Cancelar"))
+        {
+            result = null;
+            Close();
+        }
+        GUILayout.EndHorizontal();
     }
 }
