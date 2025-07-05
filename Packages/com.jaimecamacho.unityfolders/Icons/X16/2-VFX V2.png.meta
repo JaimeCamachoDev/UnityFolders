@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e61fe83ae7d0e404992ad3f424865ec8
+guid: 87f868b8f093b0e41b1fdd35d89210ba
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -37,10 +37,10 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 1
-    wrapV: 1
+    wrapU: 0
+    wrapV: 0
     wrapW: 0
-  nPOTScale: 0
+  nPOTScale: 1
   lightmap: 0
   compressionQuality: 50
   spriteMode: 0
@@ -64,7 +64,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  swizzle: 50397441
+  swizzle: 50462976
   cookieLightType: 0
   platformSettings:
   - serializedVersion: 4
