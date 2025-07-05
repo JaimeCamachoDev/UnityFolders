@@ -1,12 +1,8 @@
 fileFormatVersion: 2
-<<<<<<<< Updated upstream:Packages/com.jaimecamacho.unityfolders/Editor/FolderIconsSettings.asset.meta
 guid: d4d9df425d541af469a5913b02d5262f
-========
-guid: 60a38307c9ccc174797a132e40135bf0
->>>>>>>> Stashed changes:Packages/com.jaimecamacho.unityfolders/Editor/Resources/UnityFolders/FolderRuleset.asset.meta
 NativeFormatImporter:
   externalObjects: {}
-  mainObjectFileID: 11400000
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

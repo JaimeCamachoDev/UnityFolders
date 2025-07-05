@@ -43,7 +43,7 @@ public class FolderIconsSettingsEditor : Editor
 
             float h = EditorGUIUtility.singleLineHeight + 4;
             float preview = h * 2.5f;
-            return h * 7 + preview + 100; // fields + button + margin
+            return h * 7 + preview + 4; // fields + button + margin
 
         };
 
@@ -97,8 +97,8 @@ public class FolderIconsSettingsEditor : Editor
             var settings = (FolderIconsSettings)target;
             if (settings.showPreview)
             {
-                float previewSize = 128f; // Tamaño fijo a 32px
-                Rect smallRect = new Rect(rect.x, y, previewSize -112, previewSize - 112);
+                float previewSize = 32f; // Tamaño fijo a 32px
+                Rect smallRect = new Rect(rect.x, y, previewSize, previewSize);
                 Rect largeRect = new Rect(rect.x + previewSize + 4, y, previewSize, previewSize);
 
                 Texture2D smallTex = previewSmallProp.objectReferenceValue as Texture2D;

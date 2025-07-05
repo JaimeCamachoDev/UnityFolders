@@ -109,6 +109,7 @@ public static class FolderIconsManager
                 }
 
                 GUI.color = rule.background;
+                if (gradientTex != null)
                 GUI.DrawTexture(labelRect, gradientTex, ScaleMode.StretchToFill);
                 GUI.color = Color.white;
             }
@@ -129,7 +130,7 @@ public static class FolderIconsManager
                 }
                 else
                 {
-                    iconRect = new Rect(selectionRect.x, selectionRect.y - 2, selectionRect.height + 3, selectionRect.height + 3);
+                    iconRect = new Rect(selectionRect.x + 1, selectionRect.y - 1, selectionRect.height, selectionRect.height);
                 }
 
                 Color prevColor = GUI.color;
