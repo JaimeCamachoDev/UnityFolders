@@ -10,7 +10,7 @@ public static class UnityProjectStructureCreator
     {
         string root = "Assets";
 
-        CreateFolder(root, "1-Scripts");
+        CreateFolder(root, "1-Programming");
         CreateFolder(root, "2-Art");
         CreateFolder(root, "3-Scenes");
         CreateFolder(root, "4-Presets");
@@ -21,7 +21,7 @@ public static class UnityProjectStructureCreator
         CreateFolder(artPath, "2-VFX");
         CreateFolder(artPath, "3-SFX");
         CreateFolder(artPath, "4-Directors");
-        CreateFolder(artPath, "5-Skyboxes");
+        CreateFolder(artPath, "5-Skybox");
         CreateFolder(artPath, "6-Videos");
         CreateFolder(artPath, "7-SolidMats");
         CreateFolder(artPath, "8-PostProcessing");

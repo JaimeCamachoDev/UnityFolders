@@ -219,12 +219,12 @@ MonoBehaviour:
     priority: 2
   - ruleName: holii0
     matchType: 0
-    match: 5-Skyboxes
-    iconSmall: {fileID: 2800000, guid: 127d6c63313b8bb458a6b04d9c7cdf28, type: 3}
-    iconLarge: {fileID: 2800000, guid: 61124c9e00288c5439192f1e02898736, type: 3}
+    match: 5-Skyboxs
+    iconSmall: {fileID: 2800000, guid: eaebd3cdd3f1f1a45821627c7fc475c5, type: 3}
+    iconLarge: {fileID: 2800000, guid: 4732ff8c45be8094eaae34af01ccff24, type: 3}
     overlayIcon: {fileID: 0}
-    previewSmall: {fileID: 0}
-    previewLarge: {fileID: 0}
+    previewSmall: {fileID: 2800000, guid: eaebd3cdd3f1f1a45821627c7fc475c5, type: 3}
+    previewLarge: {fileID: 2800000, guid: 4732ff8c45be8094eaae34af01ccff24, type: 3}
     background: {r: 1, g: 1, b: 1, a: 0.5019608}
     enabled: 1
     eraseDefault: 1
