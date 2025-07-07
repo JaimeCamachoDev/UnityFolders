@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using JaimeCamachoDev.UnityFolders;
+//using JaimeCamachoDev.UnityFolders;
 
 [CustomEditor(typeof(FolderIconsSettings))]
 public class FolderIconsSettingsEditor : Editor
