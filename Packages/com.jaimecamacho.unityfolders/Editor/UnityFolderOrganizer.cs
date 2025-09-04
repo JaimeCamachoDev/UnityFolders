@@ -16,7 +16,6 @@ public static class UnityFolderOrganizer
             Debug.LogWarning("Por favor selecciona una carpeta válida para ordenar.");
             return;
         }
-
         RenameFolderWizard.Show(folderPath);
     }
 
@@ -74,7 +73,6 @@ public static class UnityFolderOrganizer
                 continue;
 
             string destinationFolderName = GetDestinationFolderName(assetPath);
-
             if (destinationFolderName == null)
                 continue;
 
@@ -177,7 +175,6 @@ public static class UnityFolderOrganizer
         }
         return path;
     }
-
     private class RenameFolderWizard : ScriptableWizard
     {
         public string newFolderName;
