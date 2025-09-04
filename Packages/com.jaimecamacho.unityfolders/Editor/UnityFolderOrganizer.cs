@@ -7,7 +7,7 @@ public static class UnityFolderOrganizer
 {
     [MenuItem("Tools/JaimeCamachoDev/UnityFolders/Ordenar carpeta", false, 20)]
     [MenuItem("Assets/JaimeCamachoDev/UnityFolders/Ordenar carpeta", false, 20)]
-    private static void OrganizeFolder()
+    private static void OrganizeFolderMenu()
     {
         string folderPath = GetSelectedPathOrFallback();
 
@@ -16,12 +16,34 @@ public static class UnityFolderOrganizer
             Debug.LogWarning("Por favor selecciona una carpeta válida para ordenar.");
             return;
         }
+        RenameFolderWizard.Show(folderPath);
+    }
 
+    internal static void OrganizeAndRename(string folderPath, string newFolderName)
+    {
+        if (!string.IsNullOrWhiteSpace(newFolderName) && newFolderName != Path.GetFileName(folderPath))
+        {
+            string parentPath = Path.GetDirectoryName(folderPath);
+            string newPath = Path.Combine(parentPath, newFolderName);
+            newPath = AssetDatabase.GenerateUniqueAssetPath(newPath);
+            string error = AssetDatabase.MoveAsset(folderPath, newPath);
+            if (!string.IsNullOrEmpty(error))
+            {
+                Debug.LogError($"Error al renombrar la carpeta: {error}");
+                return;
+            }
+            folderPath = newPath;
+        }
+
+        OrganizeFolderInternal(folderPath);
+    }
+
+    private static void OrganizeFolderInternal(string folderPath)
+    {
         string[] subfolders = new string[]
         {
             "Animation",
             "Sound",
-            "Audio",
             "Material",
             "Mesh",
             "Prefab",
@@ -49,6 +71,7 @@ public static class UnityFolderOrganizer
             // Saltar carpetas
             if (AssetDatabase.IsValidFolder(assetPath))
                 continue;
+
             string destinationFolderName = GetDestinationFolderName(assetPath);
             if (destinationFolderName == null)
                 continue;
@@ -85,7 +108,7 @@ public static class UnityFolderOrganizer
             case ".mp3":
             case ".ogg":
             case ".aiff":
-                return "Audio";
+                return "Sound";
             case ".mat":
             case ".png":
             case ".jpg":
@@ -151,6 +174,23 @@ public static class UnityFolderOrganizer
             }
         }
         return path;
+    }
+    private class RenameFolderWizard : ScriptableWizard
+    {
+        public string newFolderName;
+        private string folderPath;
+
+        public static void Show(string folderPath)
+        {
+            var wizard = DisplayWizard<RenameFolderWizard>("Renombrar carpeta", "Organizar", "Cancelar");
+            wizard.folderPath = folderPath;
+            wizard.newFolderName = Path.GetFileName(folderPath);
+        }
+
+        private void OnWizardCreate()
+        {
+            UnityFolderOrganizer.OrganizeAndRename(folderPath, newFolderName);
+        }
     }
 }
 
