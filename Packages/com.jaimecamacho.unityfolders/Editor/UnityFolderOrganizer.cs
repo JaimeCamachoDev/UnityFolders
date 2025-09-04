@@ -20,6 +20,7 @@ public static class UnityFolderOrganizer
         string[] subfolders = new string[]
         {
             "Animation",
+            "Sound",
             "Audio",
             "Material",
             "Mesh",
@@ -48,10 +49,7 @@ public static class UnityFolderOrganizer
             // Saltar carpetas
             if (AssetDatabase.IsValidFolder(assetPath))
                 continue;
-
-            string extension = Path.GetExtension(assetPath).ToLowerInvariant();
-            string destinationFolderName = GetDestinationFolderName(extension);
-
+            string destinationFolderName = GetDestinationFolderName(assetPath);
             if (destinationFolderName == null)
                 continue;
 
@@ -65,20 +63,42 @@ public static class UnityFolderOrganizer
         Debug.Log($"Carpeta {folderPath} organizada.");
     }
 
-    private static string GetDestinationFolderName(string extension)
+    private static string GetDestinationFolderName(string assetPath)
     {
+        string extension = Path.GetExtension(assetPath).ToLowerInvariant();
+
         switch (extension)
         {
             case ".anim":
+            case ".controller":
+            case ".overridecontroller":
                 return "Animation";
+            case ".fbx":
+                var importer = AssetImporter.GetAtPath(assetPath) as ModelImporter;
+                if (importer != null && ((importer.clipAnimations != null && importer.clipAnimations.Length > 0) ||
+                                        (importer.defaultClipAnimations != null && importer.defaultClipAnimations.Length > 0)))
+                {
+                    return "Animation";
+                }
+                return "Mesh";
             case ".wav":
             case ".mp3":
             case ".ogg":
             case ".aiff":
                 return "Audio";
             case ".mat":
+            case ".png":
+            case ".jpg":
+            case ".jpeg":
+            case ".tga":
+            case ".tif":
+            case ".tiff":
+            case ".psd":
+            case ".bmp":
+            case ".gif":
+            case ".exr":
+            case ".hdr":
                 return "Material";
-            case ".fbx":
             case ".obj":
             case ".blend":
             case ".mesh":
@@ -91,6 +111,10 @@ public static class UnityFolderOrganizer
                 return "Script";
             case ".shader":
             case ".cginc":
+            case ".shadergraph":
+            case ".shadersubgraph":
+            case ".compute":
+            case ".hlsl":
                 return "Shader";
             case ".vfx":
             case ".vfxgraph":
