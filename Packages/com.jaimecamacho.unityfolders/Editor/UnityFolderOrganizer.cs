@@ -21,6 +21,7 @@ public static class UnityFolderOrganizer
         {
             "Animation",
             "Sound",
+            "Audio",
             "Material",
             "Mesh",
             "Prefab",
@@ -48,9 +49,7 @@ public static class UnityFolderOrganizer
             // Saltar carpetas
             if (AssetDatabase.IsValidFolder(assetPath))
                 continue;
-
             string destinationFolderName = GetDestinationFolderName(assetPath);
-
             if (destinationFolderName == null)
                 continue;
 
@@ -86,7 +85,7 @@ public static class UnityFolderOrganizer
             case ".mp3":
             case ".ogg":
             case ".aiff":
-                return "Sound";
+                return "Audio";
             case ".mat":
             case ".png":
             case ".jpg":
