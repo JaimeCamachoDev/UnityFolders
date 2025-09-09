@@ -24,6 +24,7 @@ public static class UnityFolderOrganizer
         if (string.IsNullOrWhiteSpace(newFolderName))
         {
             Debug.LogWarning("Por favor introduce un nombre válido para la nueva carpeta.");
+          
             return null;
         }
 
