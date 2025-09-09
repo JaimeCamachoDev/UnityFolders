@@ -16,23 +16,17 @@ public static class UnityFolderOrganizer
             Debug.LogWarning("Por favor selecciona una carpeta válida para ordenar.");
             return;
         }
-        RenameFolderWizard.Show(folderPath);
+        CreateSubfolderWizard.Show(folderPath);
     }
 
-    internal static void OrganizeAndRename(string folderPath, string newFolderName)
+    internal static void OrganizeInChildFolder(string folderPath, string newFolderName)
     {
-        if (!string.IsNullOrWhiteSpace(newFolderName) && newFolderName != Path.GetFileName(folderPath))
+        if (!string.IsNullOrWhiteSpace(newFolderName))
         {
-            string parentPath = Path.GetDirectoryName(folderPath);
-            string newPath = Path.Combine(parentPath, newFolderName);
-            newPath = AssetDatabase.GenerateUniqueAssetPath(newPath);
-            string error = AssetDatabase.MoveAsset(folderPath, newPath);
-            if (!string.IsNullOrEmpty(error))
-            {
-                Debug.LogError($"Error al renombrar la carpeta: {error}");
-                return;
-            }
-            folderPath = newPath;
+            string uniquePath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, newFolderName));
+            string finalName = Path.GetFileName(uniquePath);
+            AssetDatabase.CreateFolder(folderPath, finalName);
+            folderPath = Path.Combine(folderPath, finalName);
         }
 
         OrganizeFolderInternal(folderPath);
@@ -175,21 +169,20 @@ public static class UnityFolderOrganizer
         }
         return path;
     }
-    private class RenameFolderWizard : ScriptableWizard
+    private class CreateSubfolderWizard : ScriptableWizard
     {
-        public string newFolderName;
+        public string newFolderName = "New Folder";
         private string folderPath;
 
         public static void Show(string folderPath)
         {
-            var wizard = DisplayWizard<RenameFolderWizard>("Renombrar carpeta", "Organizar", "Cancelar");
+            var wizard = DisplayWizard<CreateSubfolderWizard>("Crear subcarpeta", "Organizar", "Cancelar");
             wizard.folderPath = folderPath;
-            wizard.newFolderName = Path.GetFileName(folderPath);
         }
 
         private void OnWizardCreate()
         {
-            UnityFolderOrganizer.OrganizeAndRename(folderPath, newFolderName);
+            UnityFolderOrganizer.OrganizeInChildFolder(folderPath, newFolderName);
         }
     }
 }
