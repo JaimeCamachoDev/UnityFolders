@@ -37,7 +37,10 @@ public static class UnityAssetsRenamer
             if (nameNoExt.StartsWith(rootName + "_"))
                 continue;
 
-            string newName = rootName + "_" + nameNoExt;
+            int underscoreIndex = nameNoExt.IndexOf('_');
+            string suffix = underscoreIndex >= 0 ? nameNoExt.Substring(underscoreIndex + 1) : nameNoExt;
+
+            string newName = rootName + "_" + suffix;
             string newPath = Path.Combine(directory, newName + extension);
             newPath = AssetDatabase.GenerateUniqueAssetPath(newPath);
             AssetDatabase.MoveAsset(assetPath, newPath);
