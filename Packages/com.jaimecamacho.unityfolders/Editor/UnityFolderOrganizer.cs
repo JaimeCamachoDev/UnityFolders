@@ -21,15 +21,39 @@ public static class UnityFolderOrganizer
 
     internal static void OrganizeInChildFolder(string folderPath, string newFolderName)
     {
-        if (!string.IsNullOrWhiteSpace(newFolderName))
+        if (string.IsNullOrWhiteSpace(newFolderName))
         {
-            string uniquePath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, newFolderName));
-            string finalName = Path.GetFileName(uniquePath);
-            AssetDatabase.CreateFolder(folderPath, finalName);
-            folderPath = Path.Combine(folderPath, finalName);
+            Debug.LogWarning("Por favor introduce un nombre válido para la nueva carpeta.");
+            return;
         }
 
-        OrganizeFolderInternal(folderPath);
+        string uniquePath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, newFolderName));
+        string finalName = Path.GetFileName(uniquePath);
+        AssetDatabase.CreateFolder(folderPath, finalName);
+        string newFolderPath = Path.Combine(folderPath, finalName);
+
+        // Mover todos los assets y subcarpetas existentes a la nueva carpeta
+        foreach (string file in Directory.GetFiles(folderPath))
+        {
+            if (file.EndsWith(".meta"))
+                continue;
+
+            string destination = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(newFolderPath, Path.GetFileName(file)));
+            AssetDatabase.MoveAsset(file, destination);
+        }
+
+        foreach (string directory in Directory.GetDirectories(folderPath))
+        {
+            string normalized = directory.Replace("\\", "/");
+            if (normalized == newFolderPath)
+                continue;
+
+            string destination = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(newFolderPath, Path.GetFileName(directory)));
+            AssetDatabase.MoveAsset(normalized, destination);
+        }
+
+        AssetDatabase.Refresh();
+        OrganizeFolderInternal(newFolderPath);
     }
 
     private static void OrganizeFolderInternal(string folderPath)
