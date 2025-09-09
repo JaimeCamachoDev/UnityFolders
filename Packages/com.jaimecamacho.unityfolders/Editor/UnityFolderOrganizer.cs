@@ -19,12 +19,13 @@ public static class UnityFolderOrganizer
         CreateSubfolderWizard.Show(folderPath);
     }
 
-    internal static void OrganizeInChildFolder(string folderPath, string newFolderName)
+    internal static string OrganizeInChildFolder(string folderPath, string newFolderName)
     {
         if (string.IsNullOrWhiteSpace(newFolderName))
         {
             Debug.LogWarning("Por favor introduce un nombre válido para la nueva carpeta.");
-            return;
+          
+            return null;
         }
 
         string uniquePath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, newFolderName));
@@ -54,6 +55,7 @@ public static class UnityFolderOrganizer
 
         AssetDatabase.Refresh();
         OrganizeFolderInternal(newFolderPath);
+        return newFolderPath;
     }
 
     private static void OrganizeFolderInternal(string folderPath)

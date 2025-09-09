@@ -19,7 +19,7 @@ public static class UnityAssetsRenamer
         RenameAssetsInFolder(folderPath);
     }
 
-    private static void RenameAssetsInFolder(string folderPath)
+    internal static void RenameAssetsInFolder(string folderPath)
     {
         string rootName = Path.GetFileName(folderPath);
         string[] guids = AssetDatabase.FindAssets(string.Empty, new[] { folderPath });
