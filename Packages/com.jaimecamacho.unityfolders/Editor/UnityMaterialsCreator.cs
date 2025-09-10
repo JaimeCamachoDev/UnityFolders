@@ -59,24 +59,16 @@ public static class UnityMaterialsCreator
                 set.masMap = tex;
             }
         }
-
+        TextureSet unnamedSet = null;
         foreach (KeyValuePair<string, TextureSet> kvp in textureSets)
         {
-            string prefix = kvp.Key;
-            TextureSet set = kvp.Value;
-            string matPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, prefix + ".mat"));
-            Material mat = new Material(shader);
-            if (set.baseMap != null)
-                mat.SetTexture("_BaseMap", set.baseMap);
-            if (set.bumpMap != null)
+            if (string.IsNullOrEmpty(kvp.Key))
             {
-                mat.SetTexture("_BumpMap", set.bumpMap);
-                mat.EnableKeyword("_NORMALMAP");
+                unnamedSet = kvp.Value;
+                continue;
             }
-            if (set.masMap != null)
-                mat.SetTexture("_MAS", set.masMap);
-            AssetDatabase.CreateAsset(mat, matPath);
-            set.material = mat;
+
+            CreateMaterialAsset(folderPath, kvp.Key, kvp.Value, shader);
         }
 
         string[] modelGuids = AssetDatabase.FindAssets("t:Model", new[] { folderPath });
@@ -106,6 +98,21 @@ public static class UnityMaterialsCreator
                     {
                         mats[i] = set.material;
                     }
+                    else if (unnamedSet != null)
+                    {
+                        if (!textureSets.TryGetValue(modelPrefix, out set))
+                        {
+                            set = new TextureSet
+                            {
+                                baseMap = unnamedSet.baseMap,
+                                bumpMap = unnamedSet.bumpMap,
+                                masMap = unnamedSet.masMap
+                            };
+                            CreateMaterialAsset(folderPath, modelPrefix, set, shader);
+                            textureSets[modelPrefix] = set;
+                        }
+                        mats[i] = set.material;
+                    }
                 }
                 renderer.sharedMaterials = mats;
                 EditorUtility.SetDirty(renderer);
@@ -116,6 +123,27 @@ public static class UnityMaterialsCreator
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         Debug.Log($"Materiales creados y asignados en {folderPath}.");
+    }
+
+    private static Material CreateMaterialAsset(string folderPath, string prefix, TextureSet set, Shader shader)
+    {
+        if (string.IsNullOrEmpty(prefix))
+            return null;
+
+        string matPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, prefix + ".mat"));
+        Material mat = new Material(shader);
+        if (set.baseMap != null)
+            mat.SetTexture("_BaseMap", set.baseMap);
+        if (set.bumpMap != null)
+        {
+            mat.SetTexture("_BumpMap", set.bumpMap);
+            mat.EnableKeyword("_NORMALMAP");
+        }
+        if (set.masMap != null)
+            mat.SetTexture("_MAS", set.masMap);
+        AssetDatabase.CreateAsset(mat, matPath);
+        set.material = mat;
+        return mat;
     }
 
     private static Shader FindShaderByName(string shaderName)
