@@ -16,11 +16,7 @@ public static class UnityMaterialsOrganizerRenamer
             return;
         }
 
-        UnityMaterialsCreator.CreateMaterialsInFolder(folderPath);
-        UnityFolderOrganizer.OrganizeFolder(folderPath);
-        UnityAssetsRenamer.RenameAssetsInFolder(folderPath);
-
-        Debug.Log($"Materiales creados, carpeta organizada y assets renombrados en {folderPath}.");
+        CreateMaterialOrganizeAndRenameWizard.Show(folderPath);
     }
 
     private static string GetSelectedPathOrFallback()
@@ -37,5 +33,31 @@ public static class UnityMaterialsOrganizerRenamer
             }
         }
         return path;
+    }
+
+    private class CreateMaterialOrganizeAndRenameWizard : ScriptableWizard
+    {
+        public string newFolderName = "New Folder";
+        private string folderPath;
+
+        public static void Show(string folderPath)
+        {
+            var wizard = DisplayWizard<CreateMaterialOrganizeAndRenameWizard>(
+                "Crear Material, Ordenar y Renombrar", "Aplicar", "Cancelar");
+            wizard.folderPath = folderPath;
+        }
+
+        private void OnWizardCreate()
+        {
+            UnityMaterialsCreator.CreateMaterialsInFolder(folderPath);
+
+            string newFolderPath = UnityFolderOrganizer.OrganizeInChildFolder(folderPath, newFolderName);
+            if (string.IsNullOrEmpty(newFolderPath))
+                return;
+
+            UnityAssetsRenamer.RenameAssetsInFolder(newFolderPath);
+
+            Debug.Log($"Materiales creados, carpeta organizada y assets renombrados en {newFolderPath}.");
+        }
     }
 }
