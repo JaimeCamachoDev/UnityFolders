@@ -59,7 +59,6 @@ public static class UnityMaterialsCreator
                 set.masMap = tex;
             }
         }
-
         TextureSet unnamedSet = null;
         foreach (KeyValuePair<string, TextureSet> kvp in textureSets)
         {
