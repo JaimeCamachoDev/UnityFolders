@@ -34,7 +34,7 @@ public static class UnityAssetsRenamer
             string extension = Path.GetExtension(assetPath);
             string nameNoExt = Path.GetFileNameWithoutExtension(assetPath);
 
-            if (nameNoExt.StartsWith(rootName + "_"))
+            if (nameNoExt == rootName || nameNoExt.StartsWith(rootName + "_"))
                 continue;
 
             int underscoreIndex = nameNoExt.IndexOf('_');

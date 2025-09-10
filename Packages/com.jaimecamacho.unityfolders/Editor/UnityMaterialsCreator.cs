@@ -20,7 +20,7 @@ public static class UnityMaterialsCreator
         CreateMaterialsInFolder(folderPath);
     }
 
-    private static void CreateMaterialsInFolder(string folderPath)
+    internal static void CreateMaterialsInFolder(string folderPath)
     {
         Shader shader = FindShaderByName("VZ_MAS");
         if (shader == null)

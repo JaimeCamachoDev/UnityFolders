@@ -54,11 +54,11 @@ public static class UnityFolderOrganizer
         }
 
         AssetDatabase.Refresh();
-        OrganizeFolderInternal(newFolderPath);
+        OrganizeFolder(newFolderPath);
         return newFolderPath;
     }
 
-    private static void OrganizeFolderInternal(string folderPath)
+    internal static void OrganizeFolder(string folderPath)
     {
         string[] subfolders = new string[]
         {
