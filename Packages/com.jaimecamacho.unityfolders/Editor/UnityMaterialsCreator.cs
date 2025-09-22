@@ -22,10 +22,10 @@ public static class UnityMaterialsCreator
 
     internal static void CreateMaterialsInFolder(string folderPath)
     {
-        Shader shader = FindShaderByName("VZ_MAS");
+        Shader shader = FindShaderByName("Universal Render Pipeline/Lit");
         if (shader == null)
         {
-            Debug.LogError("No se encontró el shader 'VZ_MAS'.");
+            Debug.LogError("No se encontró el shader 'Universal Render Pipeline/Lit'.");
             return;
         }
 
@@ -37,9 +37,9 @@ public static class UnityMaterialsCreator
             string name = Path.GetFileNameWithoutExtension(path);
             Texture2D tex = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
 
-            if (name.EndsWith("_MainText"))
+            if (name.EndsWith("_ColorAlpha"))
             {
-                string key = name.Substring(0, name.Length - "_MainText".Length);
+                string key = name.Substring(0, name.Length - "_ColorAlpha".Length);
                 if (!textureSets.TryGetValue(key, out TextureSet set))
                     set = textureSets[key] = new TextureSet();
                 set.baseMap = tex;
@@ -49,14 +49,21 @@ public static class UnityMaterialsCreator
                 string key = name.Substring(0, name.Length - "_Normal".Length);
                 if (!textureSets.TryGetValue(key, out TextureSet set))
                     set = textureSets[key] = new TextureSet();
-                set.bumpMap = tex;
+                set.normalMap = tex;
             }
-            else if (name.EndsWith("_MAS"))
+            else if (name.EndsWith("_MetalSmooth"))
             {
-                string key = name.Substring(0, name.Length - "_MAS".Length);
+                string key = name.Substring(0, name.Length - "_MetalSmooth".Length);
                 if (!textureSets.TryGetValue(key, out TextureSet set))
                     set = textureSets[key] = new TextureSet();
-                set.masMap = tex;
+                set.metalSmoothMap = tex;
+            }
+            else if (name.EndsWith("_AO"))
+            {
+                string key = name.Substring(0, name.Length - "_AO".Length);
+                if (!textureSets.TryGetValue(key, out TextureSet set))
+                    set = textureSets[key] = new TextureSet();
+                set.occlusionMap = tex;
             }
         }
         TextureSet unnamedSet = null;
@@ -105,8 +112,9 @@ public static class UnityMaterialsCreator
                             set = new TextureSet
                             {
                                 baseMap = unnamedSet.baseMap,
-                                bumpMap = unnamedSet.bumpMap,
-                                masMap = unnamedSet.masMap
+                                normalMap = unnamedSet.normalMap,
+                                metalSmoothMap = unnamedSet.metalSmoothMap,
+                                occlusionMap = unnamedSet.occlusionMap
                             };
                             CreateMaterialAsset(folderPath, modelPrefix, set, shader);
                             textureSets[modelPrefix] = set;
@@ -134,13 +142,19 @@ public static class UnityMaterialsCreator
         Material mat = new Material(shader);
         if (set.baseMap != null)
             mat.SetTexture("_BaseMap", set.baseMap);
-        if (set.bumpMap != null)
+        if (set.normalMap != null)
         {
-            mat.SetTexture("_BumpMap", set.bumpMap);
+            mat.SetTexture("_BumpMap", set.normalMap);
             mat.EnableKeyword("_NORMALMAP");
         }
-        if (set.masMap != null)
-            mat.SetTexture("_MAS", set.masMap);
+        if (set.metalSmoothMap != null)
+        {
+            mat.SetTexture("_MetallicGlossMap", set.metalSmoothMap);
+            mat.EnableKeyword("_METALLICSPECGLOSSMAP");
+            mat.SetFloat("_Metallic", 1f);
+        }
+        if (set.occlusionMap != null)
+            mat.SetTexture("_OcclusionMap", set.occlusionMap);
         AssetDatabase.CreateAsset(mat, matPath);
         set.material = mat;
         return mat;
@@ -179,8 +193,9 @@ public static class UnityMaterialsCreator
     private class TextureSet
     {
         public Texture2D baseMap;
-        public Texture2D bumpMap;
-        public Texture2D masMap;
+        public Texture2D normalMap;
+        public Texture2D metalSmoothMap;
+        public Texture2D occlusionMap;
         public Material material;
     }
 }
