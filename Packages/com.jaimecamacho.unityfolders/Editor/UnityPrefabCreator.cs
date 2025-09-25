@@ -4,9 +4,9 @@ using System.IO;
 
 public static class UnityPrefabCreator
 {
-    [MenuItem("Tools/JaimeCamachoDev/UnityFolders/Crear Prefab", false, 25)]
-    [MenuItem("Assets/JaimeCamachoDev/UnityFolders/Crear Prefab", false, 25)]
-    private static void CreatePrefabMenu()
+    [MenuItem("Tools/JaimeCamachoDev/UnityFolders/Crear Prefab MAS", false, 25)]
+    [MenuItem("Assets/JaimeCamachoDev/UnityFolders/Crear Prefab MAS", false, 25)]
+    private static void CreatePrefabMASMenu()
     {
         string folderPath = GetSelectedPathOrFallback();
 
@@ -16,7 +16,22 @@ public static class UnityPrefabCreator
             return;
         }
 
-        CreatePrefabWizard.Show(folderPath);
+        CreatePrefabWizard.Show(folderPath, PrefabCreationMode.MAS);
+    }
+
+    [MenuItem("Tools/JaimeCamachoDev/UnityFolders/Crear Prefab LIT", false, 26)]
+    [MenuItem("Assets/JaimeCamachoDev/UnityFolders/Crear Prefab LIT", false, 26)]
+    private static void CreatePrefabLITMenu()
+    {
+        string folderPath = GetSelectedPathOrFallback();
+
+        if (!AssetDatabase.IsValidFolder(folderPath))
+        {
+            Debug.LogWarning("Por favor selecciona una carpeta válida para crear el prefab.");
+            return;
+        }
+
+        CreatePrefabWizard.Show(folderPath, PrefabCreationMode.LIT);
     }
 
     internal static void CreatePrefabsInFolder(string folderPath)
@@ -66,21 +81,38 @@ public static class UnityPrefabCreator
         return path;
     }
 
+    private enum PrefabCreationMode
+    {
+        MAS,
+        LIT
+    }
+
     private class CreatePrefabWizard : ScriptableWizard
     {
         public string newFolderName = "New Folder";
         private string folderPath;
+        private PrefabCreationMode mode;
 
-        public static void Show(string folderPath)
+        public static void Show(string folderPath, PrefabCreationMode mode)
         {
+            string title = mode == PrefabCreationMode.MAS ? "Crear Prefab MAS" : "Crear Prefab LIT";
             var wizard = DisplayWizard<CreatePrefabWizard>(
-                "Crear Prefab", "Aplicar", "Cancelar");
+                title, "Aplicar", "Cancelar");
             wizard.folderPath = folderPath;
+            wizard.mode = mode;
         }
 
         private void OnWizardCreate()
         {
-            UnityMaterialsCreator.CreateMaterialsInFolder(folderPath);
+            switch (mode)
+            {
+                case PrefabCreationMode.MAS:
+                    UnityMaterialsCreator.CreateMaterialsInFolder(folderPath);
+                    break;
+                case PrefabCreationMode.LIT:
+                    UnityMaterialsCreator.CreateLitMaterialsInFolder(folderPath);
+                    break;
+            }
 
             string newFolderPath = UnityFolderOrganizer.OrganizeInChildFolder(folderPath, newFolderName);
             if (string.IsNullOrEmpty(newFolderPath))
