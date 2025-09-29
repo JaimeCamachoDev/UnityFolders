@@ -282,18 +282,27 @@ public static class UnityMaterialsCreator
         string matPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, prefix + ".mat"));
         Material mat = new Material(shader);
         if (set.baseMap != null)
-            mat.SetTexture("_BaseMap", set.baseMap);
+        {
+            AssignTextureIfAvailable(mat, "_BaseMap", set.baseMap);
+            ValidateAssignedTexture(mat, "_BaseMap", set.baseMap, prefix, "Base Map");
+        }
         if (set.normalMap != null)
         {
-            mat.SetTexture("_BumpMap", set.normalMap);
+            AssignTextureIfAvailable(mat, "_BumpMap", set.normalMap);
+            ValidateAssignedTexture(mat, "_BumpMap", set.normalMap, prefix, "Normal Map");
             mat.EnableKeyword("_NORMALMAP");
         }
         if (set.maskMap != null)
         {
-            mat.SetTexture("_MetallicGlossMap", set.maskMap);
-            mat.SetTexture("_OcclusionMap", set.maskMap);
+            AssignTextureIfAvailable(mat, "_MaskMap", set.maskMap);
+            AssignTextureIfAvailable(mat, "_MetallicGlossMap", set.maskMap);
+            AssignTextureIfAvailable(mat, "_OcclusionMap", set.maskMap);
+            ValidateAssignedTexture(mat, "_MaskMap", set.maskMap, prefix, "Mask Map");
+            ValidateAssignedTexture(mat, "_MetallicGlossMap", set.maskMap, prefix, "Metallic Map");
+            ValidateAssignedTexture(mat, "_OcclusionMap", set.maskMap, prefix, "Occlusion Map");
             mat.EnableKeyword("_METALLICSPECGLOSSMAP");
             mat.SetFloat("_Metallic", 1f);
+            mat.SetFloat("_OcclusionStrength", 1f);
         }
         if (set.emissionMap != null)
         {
@@ -304,6 +313,26 @@ public static class UnityMaterialsCreator
         AssetDatabase.CreateAsset(mat, matPath);
         set.material = mat;
         return mat;
+    }
+
+    private static void AssignTextureIfAvailable(Material material, string propertyName, Texture texture)
+    {
+        if (material.HasProperty(propertyName))
+            material.SetTexture(propertyName, texture);
+    }
+
+    private static void ValidateAssignedTexture(Material material, string propertyName, Texture expectedTexture, string materialPrefix, string channelName)
+    {
+        if (!material.HasProperty(propertyName))
+        {
+            Debug.LogWarning($"El material {materialPrefix} no tiene la propiedad {propertyName} esperada para asignar la textura {channelName}.");
+            return;
+        }
+
+        if (material.GetTexture(propertyName) != expectedTexture)
+        {
+            Debug.LogWarning($"No se pudo asignar correctamente la textura {channelName} al material {materialPrefix} en la propiedad {propertyName}.");
+        }
     }
 
     private static Shader FindShaderByName(string shaderName)
