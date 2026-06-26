@@ -5,7 +5,8 @@ on:
     types: [created]
 
 permissions:
-  contents: write  # Requerido para poder hacer commit
+  contents: write
+  id-token: write
 
 jobs:
   publish:
@@ -13,12 +14,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           registry-url: 'https://registry.npmjs.org/'
 
       - name: Set package path
@@ -28,14 +29,11 @@ jobs:
           echo "PACKAGE_DIR=Packages/com.jaimecamacho.$repo_lower" >> $GITHUB_ENV
 
       - name: Extract version from tag
-        id: version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
       - name: Update version in package.json
         run: |
           jq --arg v "$VERSION" '.version = $v' "$PACKAGE_DIR/package.json" > tmp.json && mv tmp.json "$PACKAGE_DIR/package.json"
-
-      # Paso de commit y push eliminado
 
       - name: Sync README into package
         run: |
@@ -43,7 +41,7 @@ jobs:
           cp README.md "$PACKAGE_DIR/README.md"
 
       - name: Publish package to npm
-        run: npm publish
+        run: npm publish --access public --provenance
         working-directory: ${{ env.PACKAGE_DIR }}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PACKAGE }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
