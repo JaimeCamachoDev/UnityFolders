@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b402330d2ec47804dadfdca9c804fbf4, type: 3}
+  m_Name: NoteStyles
+  m_EditorClassIdentifier: com.jaimecamacho.discovernotes.Runtime::NoteStyles
+  authors:
+  - Carlos
+  - David
+  - Avelino
+  - Gaspar
+  - Annimo
+  categories:
+  - name: Info
+    icon: {fileID: 0}
+    cardBackground: {r: 0.12, g: 0.12, b: 0.14, a: 0.3}
+    tooltipAccentBar: {r: 0.28, g: 0.55, b: 1, a: 1}
+    tooltipBackground: {r: 0.12, g: 0.12, b: 0.14, a: 1}
+  - name: Warning
+    icon: {fileID: 0}
+    cardBackground: {r: 0.3, g: 0.3, b: 0.05, a: 0.6}
+    tooltipAccentBar: {r: 0.98, g: 0.78, b: 0.15, a: 1}
+    tooltipBackground: {r: 0.15, g: 0.13, b: 0.05, a: 1}
+  - name: Error
+    icon: {fileID: 0}
+    cardBackground: {r: 0.3, g: 0.08, b: 0.08, a: 0.6}
+    tooltipAccentBar: {r: 1, g: 0.4, b: 0.4, a: 1}
+    tooltipBackground: {r: 0.16, g: 0.08, b: 0.08, a: 1}
+  - name: Todo
+    icon: {fileID: 0}
+    cardBackground: {r: 0.6, g: 0.45, b: 1, a: 0.15}
+    tooltipAccentBar: {r: 0.6, g: 0.45, b: 1, a: 1}
+    tooltipBackground: {r: 0.1, g: 0.1, b: 0.15, a: 1}
+  - name: Important
+    icon: {fileID: 0}
+    cardBackground: {r: 1, g: 1, b: 1, a: 0.3}
+    tooltipAccentBar: {r: 1, g: 1, b: 1, a: 1}
+    tooltipBackground: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  discoverDisciplines:
+  - FX
+  - Audio
+  - Gameplay
+  - UI / UX
+  - Environment
+  - Systems / Code
+  - Workflow / Pipeline
+  - Other
