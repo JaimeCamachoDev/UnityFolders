@@ -14,6 +14,12 @@
       "dependencies": {},
       "url": "https://registry.npmjs.org"
     },
+    "com.jaimecamacho.unityfolders": {
+      "version": "file:com.jaimecamacho.unityfolders",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.jaimecamacho.unitypreset": {
       "version": "1.0.6",
       "depth": 0,
