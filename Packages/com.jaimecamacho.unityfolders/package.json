@@ -9,5 +9,9 @@
   "unity": "6000.0",
   "unityRelease": "0f1",
   "version": "1.0.0",
-  "description": "Carpetas personalizadas para Unity"
+  "description": "Carpetas personalizadas para Unity",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaimeCamachoDev/UnityFolders.git"
+  }
 }
