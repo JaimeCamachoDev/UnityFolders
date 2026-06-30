@@ -1,6 +1,6 @@
 {
   "name": "com.jaimecamacho.unityfolders",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "displayName": "UnityFolders",
   "description": "Carpetas personalizadas para Unity",
   "unity": "6000.0",
@@ -17,7 +17,7 @@
     "project structure"
   ],
   "author": {
-    "name": "Jaime Camacho",
+    "name": "JaimeCamachoDev",
     "email": "jaime.camacho.dev@gmail.com",
     "url": "https://github.com/JaimeCamachoDev"
   },
