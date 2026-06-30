@@ -22,6 +22,9 @@ jobs:
           node-version: 20
           registry-url: 'https://registry.npmjs.org/'
 
+      - name: Upgrade npm (trusted publishing needs >= 11.5.1)
+        run: npm install -g npm@latest
+
       - name: Set package path
         run: |
           repo_name=${GITHUB_REPOSITORY##*/}
@@ -43,5 +46,3 @@ jobs:
       - name: Publish package to npm
         run: npm publish --access public --provenance
         working-directory: ${{ env.PACKAGE_DIR }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
