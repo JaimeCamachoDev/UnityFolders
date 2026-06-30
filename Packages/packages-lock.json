@@ -148,8 +148,8 @@
         "com.unity.render-pipelines.core": "17.4.0"
       }
     },
-    "com.virtualzonenexus.unityfolders": {
-      "version": "file:com.virtualzonenexus.unityfolders",
+    "com.jaimecamacho.unityfolders": {
+      "version": "file:com.jaimecamacho.unityfolders",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
