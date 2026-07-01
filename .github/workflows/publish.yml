@@ -77,9 +77,10 @@ jobs:
       - name: Verify the Unity signature is present
         run: |
           tgz=$(ls out/*.tgz | head -n1)
-          if tar -tzf "$tgz" | grep -q 'package/.attestation.p7m'; then
+          if tar -tzf "$tgz" 2>/dev/null | grep -q 'package/.attestation.p7m'; then
             echo "Signed OK: $tgz"
-            echo "TGZ=$tgz" >> "$GITHUB_ENV"
+            # Absolute path so npm treats it as a local tarball (not a github user/repo shorthand).
+            echo "TGZ=$(pwd)/$tgz" >> "$GITHUB_ENV"
           else
             echo "::error::Packing produced no .attestation.p7m — signing did not happen. Check the service account secrets/role."
             exit 1
