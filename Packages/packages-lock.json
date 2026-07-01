@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.jaimecamachodev.unityfolders": {
+      "version": "file:com.jaimecamachodev.unityfolders",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.burst": {
       "version": "1.8.29",
       "depth": 2,
@@ -147,12 +153,6 @@
         "com.unity.shadergraph": "17.4.0",
         "com.unity.render-pipelines.core": "17.4.0"
       }
-    },
-    "com.jaimecamacho.unityfolders": {
-      "version": "file:com.jaimecamacho.unityfolders",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
     },
     "com.unity.modules.adaptiveperformance": {
       "version": "1.0.0",

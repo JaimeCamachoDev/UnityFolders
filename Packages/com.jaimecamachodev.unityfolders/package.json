@@ -1,6 +1,6 @@
 {
-  "name": "com.jaimecamacho.unityfolders",
-  "version": "1.5.0",
+  "name": "com.jaimecamachodev.unityfolders",
+  "version": "1.5.3",
   "displayName": "UnityFolders",
   "description": "Carpetas personalizadas para Unity",
   "unity": "6000.0",
@@ -18,11 +18,12 @@
   ],
   "author": {
     "name": "JaimeCamachoDev",
-    "email": "jaime.camacho.dev@gmail.com",
-    "url": "https://github.com/JaimeCamachoDev"
+    "url": "https://github.com/JaimeCamachoDev",
+    "email": "jaime.camacho.dev@gmail.com"
   },
   "repository": {
+    "url": "https://github.com/JaimeCamachoDev/UnityFolders.git",
     "type": "git",
-    "url": "git+https://github.com/JaimeCamachoDev/UnityFolders.git"
+    "revision": "46bf9d7702dd38bfa9b40d71ea749b5293b94957"
   }
 }

@@ -13,6 +13,16 @@ MonoBehaviour:
   m_Name: VzFolders Data
   m_EditorClassIdentifier: VzFolders::VzFolders.VzFoldersData
   folderDatas_byGuid:
-    keys: []
-    values: []
+    keys:
+    - 0546cd8c5f66cb64bb993f6af1c6efff
+    - 5a4c7bd5930cbf244872c8e9188137a8
+    values:
+    - iconNameOrGuid: 
+      colorIndex: 1
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 3
+      isIconRecursive: 0
+      isColorRecursive: 0
   bookmarks: []
