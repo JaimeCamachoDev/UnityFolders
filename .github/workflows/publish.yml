@@ -1,33 +1,38 @@
 name: Publish to npmjs
 
-# Publishes the SIGNED Unity package (.tgz) that you attach to the GitHub Release.
+# Fully automated: on every published Release this workflow packs AND signs the
+# Unity package with the Unity Package Manager CLI (using a service account), then
+# publishes the signed tarball to npm via OIDC (no tokens).
 #
-# Why publish the attached tarball instead of building from source?
-# Unity's signature lives inside the package as `.attestation.p7m` and is bound to
-# the exact package name, version and a content hash. If the workflow rebuilt or
-# modified the package (bumping the version, copying files, repacking...) the hash
-# would change and the signature would be lost. So we upload the exact .tgz you
-# exported and signed from Unity, untouched.
+# Signing produces the same `package/.attestation.p7m` you get when exporting from
+# the Unity Editor, so you never have to export or attach anything by hand.
 #
-# How to release:
-#   1. In Unity, export + sign the package (this produces the .tgz with the signature).
-#   2. GitHub -> Releases -> Draft a new release -> create the tag (e.g. v1.5.4).
-#   3. Attach the signed .tgz as a release binary.
-#   4. Publish release. This workflow then uploads that exact .tgz to npm.
+# One-time setup (repository secrets: Settings -> Secrets and variables -> Actions):
+#   - UPM_SERVICE_ACCOUNT_KEY_ID      Service account key id     (Unity Cloud)
+#   - UPM_SERVICE_ACCOUNT_KEY_SECRET  Service account key secret (Unity Cloud)
+#   - UNITY_ORGANIZATION_ID           Unity organization id
+# The service account needs the "Package Manager Package Signer" role.
+# npm side needs a Trusted Publisher configured for this package + publish.yml.
+#
+# To release: GitHub -> Releases -> Draft a new release -> tag vX.Y.Z -> Publish.
+# The published version is taken from the tag.
 
 on:
   release:
     types: [published]
 
 permissions:
-  contents: read       # read the release assets
-  id-token: write      # OIDC trusted publishing (no tokens)
+  contents: read
+  id-token: write   # OIDC trusted publishing (no tokens)
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -37,30 +42,46 @@ jobs:
       - name: Upgrade npm (trusted publishing needs >= 11.5.1)
         run: npm install -g npm@latest
 
-      - name: Download the signed package from the release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ github.event.release.tag_name }}
+      - name: Detect package folder
         run: |
-          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern '*.tgz' --dir .
-          count=$(ls -1 *.tgz 2>/dev/null | wc -l)
-          if [ "$count" -eq 0 ]; then
-            echo "::error::No .tgz asset attached to release $TAG. Attach the signed package exported from Unity and re-run."
+          pkg_json=$(find Packages -mindepth 2 -maxdepth 2 -name package.json | head -n1)
+          if [ -z "$pkg_json" ]; then
+            echo "::error::No package.json found under Packages/*/"
             exit 1
           fi
-          if [ "$count" -gt 1 ]; then
-            echo "::error::More than one .tgz attached to release $TAG. Attach only the signed package."
-            exit 1
-          fi
-          echo "TGZ=$(ls -1 *.tgz)" >> "$GITHUB_ENV"
-          echo "Found signed package: $(ls -1 *.tgz)"
+          echo "PACKAGE_DIR=$(dirname "$pkg_json")" >> "$GITHUB_ENV"
+          echo "Detected package dir: $(dirname "$pkg_json")"
+
+      - name: Set version from the release tag
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"   # strip refs/tags/
+          VERSION="${VERSION#v}"               # strip a leading v (v1.5.5 -> 1.5.5)
+          jq --arg v "$VERSION" '.version = $v' "$PACKAGE_DIR/package.json" > tmp.json
+          mv tmp.json "$PACKAGE_DIR/package.json"
+          echo "Version set to $VERSION"
+
+      - name: Install Unity Package Manager CLI
+        run: |
+          curl -fsSL https://cdn.packages.unity.com/upm-cli/install.sh | bash
+          echo "$HOME/.upm/bin" >> "$GITHUB_PATH"
+
+      - name: Pack and sign the package
+        env:
+          UPM_SERVICE_ACCOUNT_KEY_ID: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_ID }}
+          UPM_SERVICE_ACCOUNT_KEY_SECRET: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_SECRET }}
+        run: |
+          mkdir -p out
+          upm pack "$PACKAGE_DIR" --organization-id "${{ secrets.UNITY_ORGANIZATION_ID }}" --destination ./out
+          ls -l out/*.tgz
 
       - name: Verify the Unity signature is present
         run: |
-          if tar -tzf "$TGZ" | grep -q 'package/.attestation.p7m'; then
-            echo "Unity signature (.attestation.p7m) found inside the tarball."
+          tgz=$(ls out/*.tgz | head -n1)
+          if tar -tzf "$tgz" | grep -q 'package/.attestation.p7m'; then
+            echo "Signed OK: $tgz"
+            echo "TGZ=$tgz" >> "$GITHUB_ENV"
           else
-            echo "::error::The .tgz has no package/.attestation.p7m — it is NOT signed. Re-export/sign it from Unity."
+            echo "::error::Packing produced no .attestation.p7m — signing did not happen. Check the service account secrets/role."
             exit 1
           fi
 
