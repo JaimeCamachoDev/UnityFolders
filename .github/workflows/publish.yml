@@ -1,21 +1,33 @@
 name: Publish to npmjs
 
+# Publishes the SIGNED Unity package (.tgz) that you attach to the GitHub Release.
+#
+# Why publish the attached tarball instead of building from source?
+# Unity's signature lives inside the package as `.attestation.p7m` and is bound to
+# the exact package name, version and a content hash. If the workflow rebuilt or
+# modified the package (bumping the version, copying files, repacking...) the hash
+# would change and the signature would be lost. So we upload the exact .tgz you
+# exported and signed from Unity, untouched.
+#
+# How to release:
+#   1. In Unity, export + sign the package (this produces the .tgz with the signature).
+#   2. GitHub -> Releases -> Draft a new release -> create the tag (e.g. v1.5.4).
+#   3. Attach the signed .tgz as a release binary.
+#   4. Publish release. This workflow then uploads that exact .tgz to npm.
+
 on:
   release:
-    types: [created]
+    types: [published]
 
 permissions:
-  contents: write
-  id-token: write
+  contents: read       # read the release assets
+  id-token: write      # OIDC trusted publishing (no tokens)
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -25,30 +37,32 @@ jobs:
       - name: Upgrade npm (trusted publishing needs >= 11.5.1)
         run: npm install -g npm@latest
 
-      - name: Set package path
+      - name: Download the signed package from the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          # Auto-detect the embedded UPM package folder (the one under Packages/ that has a package.json).
-          # This survives package renames so the workflow never breaks on a name change.
-          pkg_json=$(find Packages -mindepth 2 -maxdepth 2 -name package.json | head -n1)
-          if [ -z "$pkg_json" ]; then
-            echo "::error::No package.json found under Packages/*/"
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern '*.tgz' --dir .
+          count=$(ls -1 *.tgz 2>/dev/null | wc -l)
+          if [ "$count" -eq 0 ]; then
+            echo "::error::No .tgz asset attached to release $TAG. Attach the signed package exported from Unity and re-run."
             exit 1
           fi
-          echo "PACKAGE_DIR=$(dirname "$pkg_json")" >> $GITHUB_ENV
-          echo "Detected package dir: $(dirname "$pkg_json")"
+          if [ "$count" -gt 1 ]; then
+            echo "::error::More than one .tgz attached to release $TAG. Attach only the signed package."
+            exit 1
+          fi
+          echo "TGZ=$(ls -1 *.tgz)" >> "$GITHUB_ENV"
+          echo "Found signed package: $(ls -1 *.tgz)"
 
-      - name: Extract version from tag
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-
-      - name: Update version in package.json
+      - name: Verify the Unity signature is present
         run: |
-          jq --arg v "$VERSION" '.version = $v' "$PACKAGE_DIR/package.json" > tmp.json && mv tmp.json "$PACKAGE_DIR/package.json"
+          if tar -tzf "$TGZ" | grep -q 'package/.attestation.p7m'; then
+            echo "Unity signature (.attestation.p7m) found inside the tarball."
+          else
+            echo "::error::The .tgz has no package/.attestation.p7m — it is NOT signed. Re-export/sign it from Unity."
+            exit 1
+          fi
 
-      - name: Sync README into package
-        run: |
-          mkdir -p "$PACKAGE_DIR"
-          cp README.md "$PACKAGE_DIR/README.md"
-
-      - name: Publish package to npm
-        run: npm publish --access public --provenance
-        working-directory: ${{ env.PACKAGE_DIR }}
+      - name: Publish signed tarball to npm
+        run: npm publish "$TGZ" --access public
