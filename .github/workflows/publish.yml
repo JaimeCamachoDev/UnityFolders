@@ -27,9 +27,15 @@ jobs:
 
       - name: Set package path
         run: |
-          repo_name=${GITHUB_REPOSITORY##*/}
-          repo_lower=$(echo "$repo_name" | tr '[:upper:]' '[:lower:]')
-          echo "PACKAGE_DIR=Packages/com.jaimecamacho.$repo_lower" >> $GITHUB_ENV
+          # Auto-detect the embedded UPM package folder (the one under Packages/ that has a package.json).
+          # This survives package renames so the workflow never breaks on a name change.
+          pkg_json=$(find Packages -mindepth 2 -maxdepth 2 -name package.json | head -n1)
+          if [ -z "$pkg_json" ]; then
+            echo "::error::No package.json found under Packages/*/"
+            exit 1
+          fi
+          echo "PACKAGE_DIR=$(dirname "$pkg_json")" >> $GITHUB_ENV
+          echo "Detected package dir: $(dirname "$pkg_json")"
 
       - name: Extract version from tag
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
