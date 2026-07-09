@@ -31,10 +31,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: 'https://registry.npmjs.org/'
@@ -84,4 +84,11 @@ jobs:
           fi
 
       - name: Publish signed tarball to npm
-        run: npm publish "$TGZ" --access public
+        run: |
+          for i in 1 2 3; do
+            npm publish "$TGZ" --access public && exit 0
+            echo "Intento $i de publicación fallido (posible fallo transitorio de OIDC en npm). Reintentando en 20s..."
+            sleep 20
+          done
+          echo "::error::npm publish falló tras 3 intentos"
+          exit 1
