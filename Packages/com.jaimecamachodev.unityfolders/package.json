@@ -1,8 +1,8 @@
 {
   "name": "com.jaimecamachodev.unityfolders",
-  "version": "1.8.0",
-  "displayName": "UnityFolders",
-  "description": "Carpetas personalizadas para Unity",
+  "version": "2.0.0",
+  "displayName": "VzFolders",
+  "description": "VzFolders: navegador de carpetas personalizado para Unity con paletas de color e iconos por carpeta.",
   "unity": "6000.0",
   "unityRelease": "0f1",
   "license": "MIT",
@@ -11,6 +11,7 @@
   "licensesUrl": "https://github.com/JaimeCamachoDev/UnityFolders/blob/main/LICENSE",
   "keywords": [
     "unity",
+    "vzfolders",
     "folders",
     "editor",
     "icons",
