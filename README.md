@@ -32,7 +32,7 @@ Para instalarla en **otro proyecto de Unity**, añade un scoped registry a tu `P
     }
   ],
   "dependencies": {
-    "com.jaimecamachodev.unityfolders": "1.8.2"
+    "com.jaimecamachodev.unityfolders": "2.0.0"
   }
 }
 ```
@@ -43,7 +43,9 @@ También puedes hacerlo desde el Editor:
    - **Name:** `JaimeCamachoDevs`
    - **URL:** `https://registry.npmjs.org`
    - **Scope(s):** `com.jaimecamachodev`
-3. Abre `Window > Package Manager`, cambia el desplegable a **My Registries** y busca **UnityFolders** para instalarla.
+3. Abre `Window > Package Manager`, cambia el desplegable a **My Registries** y busca **VzFolders** para instalarla.
+
+> A partir de la versión `2.0.0` el paquete distribuye la herramienta **VzFolders** (reescritura completa que sustituye al sistema anterior de iconos de carpetas).
 
 ---
 
