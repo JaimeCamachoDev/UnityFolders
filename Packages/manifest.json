@@ -21,6 +21,13 @@
       "scopes": [
         "com.jaimecamacho"
       ]
+    },
+    {
+      "name": "JaimeCamachoDevs",
+      "url": "https://registry.npmjs.org",
+      "scopes": [
+        "com.jaimecamachodev"
+      ]
     }
   ]
 }
