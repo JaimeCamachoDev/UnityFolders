@@ -14,6 +14,39 @@ Esta es la estructura oficial del proyecto, diseñada para maximizar claridad, e
 
 ---
 
+## 📦 Instalación (VzFolders vía Package Manager)
+
+Esta tool (`VzFolders`) se distribuye como paquete de Unity Package Manager con el id `com.jaimecamachodev.unityfolders`, publicado en npm.
+
+Para instalarla en **otro proyecto de Unity**, añade un scoped registry a tu `Packages/manifest.json`:
+
+```json
+{
+  "scopedRegistries": [
+    {
+      "name": "JaimeCamachoDevs",
+      "url": "https://registry.npmjs.org",
+      "scopes": [
+        "com.jaimecamachodev"
+      ]
+    }
+  ],
+  "dependencies": {
+    "com.jaimecamachodev.unityfolders": "1.8.2"
+  }
+}
+```
+
+También puedes hacerlo desde el Editor:
+1. `Edit > Project Settings > Package Manager`.
+2. En **Scoped Registries**, pulsa `+` y añade:
+   - **Name:** `JaimeCamachoDevs`
+   - **URL:** `https://registry.npmjs.org`
+   - **Scope(s):** `com.jaimecamachodev`
+3. Abre `Window > Package Manager`, cambia el desplegable a **My Registries** y busca **UnityFolders** para instalarla.
+
+---
+
 ## 📂 Estructura Principal
 
 ```
