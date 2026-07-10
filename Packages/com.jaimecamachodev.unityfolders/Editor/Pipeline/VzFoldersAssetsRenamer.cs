@@ -33,10 +33,15 @@ namespace VzFolders.Pipeline
             var rootName = folderPath.GetFilename(withExtension: true);
             var guids = AssetDatabase.FindAssets(string.Empty, new[] { folderPath });
 
+            var renamedCount = 0;
             foreach (var guid in guids)
             {
                 var assetPath = guid.ToPath();
                 if (AssetDatabase.IsValidFolder(assetPath)) continue;
+
+                // Scripts are never renamed: Unity resolves them by GUID, but a filename that no
+                // longer matches its class name is confusing and can trip up other tools/IDEs.
+                if (VzFoldersAssetTypeFolders.GetFolderForAsset(assetPath) == VzFoldersAssetTypeFolders.Script) continue;
 
                 var directory = assetPath.GetParentPath();
                 var extension = assetPath.GetExtension();
@@ -49,10 +54,11 @@ namespace VzFolders.Pipeline
 
                 var newPath = AssetDatabase.GenerateUniqueAssetPath(directory.CombinePath(rootName + "_" + suffix + extension));
                 AssetDatabase.MoveAsset(assetPath, newPath);
+                renamedCount++;
             }
 
             AssetDatabase.Refresh();
-            Debug.Log($"VzFolders: assets renombrados en {folderPath}.");
+            Debug.Log($"VzFolders: {renamedCount} asset(s) renombrados en {folderPath}.");
         }
     }
 }
