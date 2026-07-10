@@ -32,7 +32,7 @@ Para instalarla en **otro proyecto de Unity**, añade un scoped registry a tu `P
     }
   ],
   "dependencies": {
-    "com.jaimecamachodev.unityfolders": "2.0.0"
+    "com.jaimecamachodev.unityfolders": "2.1.0"
   }
 }
 ```
@@ -54,13 +54,15 @@ También puedes hacerlo desde el Editor:
 ```
 Assets/
 │
-├── 1-Scripts/               → Scripts globales del proyecto (Managers, Systems, etc.)
+├── 1-Programming/           → Scripts globales, prefabs de lógica y materiales sólidos
+│   ├── Observers/
+│   ├── Prefabs/
+│   ├── Scripts/
+│   └── SolidMats/
 ├── 2-Art/                   → Todo el arte (3D, VFX, SFX, UI, etc.)
 ├── 3-Scenes/                → Escenas jugables (cargables)
 ├── 4-Presets/               → Presets de herramientas y assets
-├── 5-Settings/              → Settings del proyecto (URP, Inputs, Tags, etc.)
-├── Plugins/                 → Plugins externos o de la Asset Store
-└── Packages/                → Packages de Unity Package Manager (Read-only)
+└── 5-Settings/              → Settings del proyecto (URP, Inputs, Tags, etc.)
 ```
 
 ---
@@ -71,31 +73,35 @@ Assets/
 2-Art/
 │
 ├── 1-3D/                    → Modelos 3D organizados por tipo
-│   ├── Characters/          → Personajes (Player, NPCs, etc.)
-│   ├── Environment/         → Escenarios (por escena y globales)
-│   │   ├── Scene_1_Forest/  → Assets específicos de la escena 1
-│   │   └── Global/          → Assets comunes de entornos (Shared)
+│   ├── Animals/
+│   ├── Characters/
+│   └── Environments/
 │
 ├── 2-VFX/                   → Efectos visuales globales (fuego, explosiones, etc.)
 ├── 3-SFX/                   → Sonidos globales
 ├── 4-Directors/             → Timeline, Playables, cinemáticas
 ├── 5-Skyboxes/              → Cielos y entornos espaciales
 ├── 6-Videos/                → Videos y cutscenes
-├── 7-SolidMats/             → Materiales sólidos genéricos o tiles
-├── 8-PostProcessing/        → Post-Process assets y perfiles
-├── 9-UI/                    → Interfaces gráficas, fonts, prefabs de UI
-└── 10-Lighting/             → Lightmaps, HDRIs, configuraciones de iluminación
+├── 7-PostProcessing/        → Post-Process assets y perfiles
+└── 8-UI/                    → Interfaces gráficas, fonts, prefabs de UI
 ```
+
+Esta estructura se puede generar automáticamente con **VzFolders**: `Tools > JaimeCamachoDev > VzFolders > Project structure > Create base project structure` (o clic derecho en `Assets` > `VzFolders > Create base project structure`).
 
 ---
 
-## 📋 Reglas de Organización:
-1. **Cada escena** tiene su propia carpeta en `Environment` para sus assets internos.
-2. Assets que se usan en **múltiples escenas** van en las carpetas `Global` si corresponde.
-3. Los nombres de las escenas siguen el formato:  
-`Scene_01_NombrePropio` para orden automático y claridad.
-4. Scripts globales siempre van en `1-Scripts` (nunca mezclados con arte).
-5. Plugins y paquetes de terceros van en sus carpetas designadas (`Plugins` y `Packages`).
+## 🧹 Herramientas de organización de assets (VzFolders)
+
+Además de la navegación con paletas de color, VzFolders incluye un pipeline para que las carpetas de arte no se conviertan en un caos cuando varios artistas dejan texturas, mallas y prefabs mezclados. Todo vive bajo `Tools > JaimeCamachoDev > VzFolders > ...` y también como clic derecho en `Assets > VzFolders > ...`:
+
+- **Project structure > Create base project structure** — crea el árbol de carpetas de arriba.
+- **Project structure > Create asset type folders...** — pide un nombre y crea, dentro de la carpeta seleccionada, las subcarpetas por tipo: `Animation`, `Audio`, `Material`, `Mesh`, `Prefab`, `Script`, `Shader`, `VFX`.
+- **Organize > Organize this folder** — mueve, en el sitio, cada asset suelto de la carpeta seleccionada a su subcarpeta de tipo (creándolas si hace falta) y borra las subcarpetas que queden vacías.
+- **Organize > Organize into new subfolder...** — igual que lo anterior, pero primero envuelve todo el contenido en una subcarpeta nueva con el nombre que indiques.
+- **Organize > Rename assets with folder prefix** — renombra todos los assets de una carpeta con el prefijo del nombre de la carpeta (p. ej. `Rock01_Diffuse.png`).
+- **Ingest pipeline > Create materials (MAS / Lit)** — genera materiales URP a partir de texturas con sufijos `_ColorAlpha`, `_Normal`, `_MetalSmooth`/`_MaskMap`, `_AO`/`_Emission`, y los asigna automáticamente a los modelos importados de la misma carpeta.
+- **Ingest pipeline > Create prefabs from Mesh folder** — crea un prefab por cada malla dentro de la subcarpeta `Mesh`.
+- **Ingest pipeline > Full pipeline...** — asistente que encadena, de forma configurable, la creación de materiales, el volcado a una subcarpeta nueva, el renombrado y la creación de prefabs en un solo paso.
 
 ---
 
