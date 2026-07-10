@@ -27,6 +27,8 @@ namespace VzFolders.Pipeline
 
         internal static void CreatePrefabsInFolder(string folderPath)
         {
+            AssetDatabase.Refresh(); // import any model dropped in via the OS file explorer before AssetDatabase can see it
+
             var meshFolder = folderPath.CombinePath(VzFoldersAssetTypeFolders.Mesh);
             var prefabFolder = folderPath.CombinePath(VzFoldersAssetTypeFolders.Prefab);
 
@@ -37,9 +39,19 @@ namespace VzFolders.Pipeline
             }
 
             if (!AssetDatabase.IsValidFolder(prefabFolder))
+            {
                 AssetDatabase.CreateFolder(folderPath, VzFoldersAssetTypeFolders.Prefab);
+                AssetDatabase.Refresh(); // the new Prefab folder must exist on disk before we generate a unique path into it below
+            }
 
-            foreach (var guid in AssetDatabase.FindAssets("t:Model", new[] { meshFolder }))
+            var modelGuids = AssetDatabase.FindAssets("t:Model", new[] { meshFolder });
+            if (modelGuids.Length == 0)
+            {
+                Debug.LogWarning($"VzFolders: no se encontró ninguna malla en {meshFolder} — no se creó ningún prefab.");
+                return;
+            }
+
+            foreach (var guid in modelGuids)
             {
                 var modelPath = guid.ToPath();
                 var model = AssetDatabase.LoadAssetAtPath<GameObject>(modelPath);

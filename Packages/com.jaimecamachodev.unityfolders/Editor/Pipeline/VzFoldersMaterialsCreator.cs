@@ -49,6 +49,12 @@ namespace VzFolders.Pipeline
             };
 
             var textureSets = BuildTextureSets(folderPath, suffixes);
+            if (textureSets.Count == 0)
+            {
+                Debug.LogWarning($"VzFolders: no se encontró ninguna textura en {folderPath} con los sufijos _ColorAlpha/_Normal/_MetalSmooth/_AO — no se creó ningún material.");
+                return;
+            }
+
             CreateMaterialAssets(folderPath, textureSets, shader, CreateMasMaterialAsset);
             AssignMaterialsToModels(folderPath, textureSets, shader, CreateMasMaterialAsset);
 
@@ -72,6 +78,12 @@ namespace VzFolders.Pipeline
             };
 
             var textureSets = BuildTextureSets(folderPath, suffixes);
+            if (textureSets.Count == 0)
+            {
+                Debug.LogWarning($"VzFolders: no se encontró ninguna textura en {folderPath} con los sufijos _ColorAlpha/_Normal/_Emission/_MaskMap — no se creó ningún material.");
+                return;
+            }
+
             CreateMaterialAssets(folderPath, textureSets, shader, CreateLitMaterialAsset);
             AssignMaterialsToModels(folderPath, textureSets, shader, CreateLitMaterialAsset);
 
@@ -82,6 +94,8 @@ namespace VzFolders.Pipeline
 
         static Dictionary<string, TextureSet> BuildTextureSets(string folderPath, (string suffix, System.Action<TextureSet, Texture2D> assign)[] suffixes)
         {
+            AssetDatabase.Refresh(); // import any texture dropped in via the OS file explorer before AssetDatabase can see it
+
             var textureSets = new Dictionary<string, TextureSet>();
 
             foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { folderPath }))

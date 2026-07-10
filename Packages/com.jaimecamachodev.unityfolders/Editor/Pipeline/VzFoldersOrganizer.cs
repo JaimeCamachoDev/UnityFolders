@@ -51,32 +51,27 @@ namespace VzFolders.Pipeline
                 return null;
             }
 
+            // Import any file dropped in via the OS file explorer before AssetDatabase can see it.
+            AssetDatabase.Refresh();
+
             var newFolderPath = AssetDatabase.GenerateUniqueAssetPath(folderPath.CombinePath(newFolderName));
             AssetDatabase.CreateFolder(folderPath, newFolderPath.GetFilename(withExtension: true));
+            AssetDatabase.Refresh(); // the new folder must exist on disk before we generate paths into it below
 
-            try
+            foreach (var file in Directory.GetFiles(folderPath))
             {
-                AssetDatabase.StartAssetEditing();
-
-                foreach (var file in Directory.GetFiles(folderPath))
-                {
-                    if (file.EndsWith(".meta")) continue;
-                    var destination = AssetDatabase.GenerateUniqueAssetPath(newFolderPath.CombinePath(Path.GetFileName(file)));
-                    AssetDatabase.MoveAsset(file.Replace("\\", "/"), destination);
-                }
-
-                foreach (var directory in Directory.GetDirectories(folderPath))
-                {
-                    var normalized = directory.Replace("\\", "/");
-                    if (normalized == newFolderPath) continue;
-
-                    var destination = AssetDatabase.GenerateUniqueAssetPath(newFolderPath.CombinePath(Path.GetFileName(directory)));
-                    AssetDatabase.MoveAsset(normalized, destination);
-                }
+                if (file.EndsWith(".meta")) continue;
+                var destination = AssetDatabase.GenerateUniqueAssetPath(newFolderPath.CombinePath(Path.GetFileName(file)));
+                AssetDatabase.MoveAsset(file.Replace("\\", "/"), destination);
             }
-            finally
+
+            foreach (var directory in Directory.GetDirectories(folderPath))
             {
-                AssetDatabase.StopAssetEditing();
+                var normalized = directory.Replace("\\", "/");
+                if (normalized == newFolderPath) continue;
+
+                var destination = AssetDatabase.GenerateUniqueAssetPath(newFolderPath.CombinePath(Path.GetFileName(directory)));
+                AssetDatabase.MoveAsset(normalized, destination);
             }
 
             AssetDatabase.Refresh();
@@ -88,35 +83,38 @@ namespace VzFolders.Pipeline
         // then deletes any subfolder left empty by the move.
         internal static void OrganizeFolder(string folderPath)
         {
-            try
-            {
-                AssetDatabase.StartAssetEditing();
+            // Import any file dropped in via the OS file explorer before AssetDatabase can see it.
+            AssetDatabase.Refresh();
 
-                var assetGuids = AssetDatabase.FindAssets(string.Empty, new[] { folderPath });
-                foreach (var guid in assetGuids)
+            var movedCount = 0;
+            var assetGuids = AssetDatabase.FindAssets(string.Empty, new[] { folderPath });
+            foreach (var guid in assetGuids)
+            {
+                var assetPath = guid.ToPath();
+                if (AssetDatabase.IsValidFolder(assetPath)) continue;
+
+                var destinationFolderName = VzFoldersAssetTypeFolders.GetFolderForAsset(assetPath);
+                if (destinationFolderName == null) continue;
+
+                var destinationFolder = folderPath.CombinePath(destinationFolderName);
+                if (!AssetDatabase.IsValidFolder(destinationFolder))
                 {
-                    var assetPath = guid.ToPath();
-                    if (AssetDatabase.IsValidFolder(assetPath)) continue;
-
-                    var destinationFolderName = VzFoldersAssetTypeFolders.GetFolderForAsset(assetPath);
-                    if (destinationFolderName == null) continue;
-
-                    var destinationFolder = folderPath.CombinePath(destinationFolderName);
-                    if (!AssetDatabase.IsValidFolder(destinationFolder))
-                        AssetDatabase.CreateFolder(folderPath, destinationFolderName);
-
-                    var destinationPath = AssetDatabase.GenerateUniqueAssetPath(destinationFolder.CombinePath(assetPath.GetFilename(withExtension: true)));
-                    AssetDatabase.MoveAsset(assetPath, destinationPath);
+                    AssetDatabase.CreateFolder(folderPath, destinationFolderName);
+                    AssetDatabase.Refresh(); // the new type folder must exist on disk before we generate a unique path into it below
                 }
-            }
-            finally
-            {
-                AssetDatabase.StopAssetEditing();
+
+                var destinationPath = AssetDatabase.GenerateUniqueAssetPath(destinationFolder.CombinePath(assetPath.GetFilename(withExtension: true)));
+                AssetDatabase.MoveAsset(assetPath, destinationPath);
+                movedCount++;
             }
 
             VzFoldersPipelineUtils.RemoveEmptySubdirectories(folderPath);
             AssetDatabase.Refresh();
-            Debug.Log($"VzFolders: carpeta {folderPath} ordenada.");
+
+            if (movedCount == 0)
+                Debug.LogWarning($"VzFolders: no había ningún asset suelto que ordenar en {folderPath} (¿ya estaban todos dentro de una subcarpeta?).");
+            else
+                Debug.Log($"VzFolders: carpeta {folderPath} ordenada ({movedCount} asset(s) movidos).");
         }
 
         class NewSubfolderWizard : ScriptableWizard
