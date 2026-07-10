@@ -98,7 +98,9 @@ Además de la navegación con paletas de color, VzFolders incluye un pipeline pa
 - **Project structure > Create asset type folders...** — pide un nombre y crea, dentro de la carpeta seleccionada, las subcarpetas por tipo: `Animation`, `Audio`, `Material`, `Mesh`, `Prefab`, `Script`, `Shader`, `VFX`.
 - **Organize > Organize this folder** — mueve, en el sitio, cada asset suelto de la carpeta seleccionada a su subcarpeta de tipo (creándolas si hace falta) y borra las subcarpetas que queden vacías.
 - **Organize > Organize into new subfolder...** — igual que lo anterior, pero primero envuelve todo el contenido en una subcarpeta nueva con el nombre que indiques.
-- **Organize > Rename assets with folder prefix** — renombra todos los assets de una carpeta con el prefijo del nombre de la carpeta (p. ej. `Rock01_Diffuse.png`).
+- **Organize > Rename assets with folder prefix** — renombra todos los assets de una carpeta con el prefijo del nombre de la carpeta (p. ej. `Rock01_Diffuse.png`). Los scripts (`.cs`) nunca se renombran, para no desincronizar el nombre de archivo con el de la clase.
+
+La clasificación por tipo reconoce, además de las extensiones obvias (`.fbx`, `.mat`, `.wav`, `.prefab`, `.cs`, `.shader`...), los `.signal` y `.playable` de Timeline (→ `Animation`). Para `.asset` (la extensión genérica de Unity para ScriptableObjects/assets nativos) mira el tipo real del asset: una `Mesh` serializada va a `Mesh`, un `AnimationClip`/`AnimatorController` va a `Animation`; cualquier otro ScriptableObject se deja donde está en vez de arriesgarse a moverlo mal.
 - **Ingest pipeline > Create materials (MAS / Lit)** — genera materiales URP a partir de texturas con sufijos `_ColorAlpha`, `_Normal`, `_MetalSmooth`/`_MaskMap`, `_AO`/`_Emission`, y los asigna automáticamente a los modelos importados de la misma carpeta.
 - **Ingest pipeline > Create prefabs from Mesh folder** — crea un prefab por cada malla dentro de la subcarpeta `Mesh`.
 - **Ingest pipeline > Full pipeline...** — asistente que encadena, de forma configurable, la creación de materiales, el volcado a una subcarpeta nueva, el renombrado y la creación de prefabs en un solo paso.

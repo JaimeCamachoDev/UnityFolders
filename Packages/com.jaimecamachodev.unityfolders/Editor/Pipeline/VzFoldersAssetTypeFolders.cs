@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 namespace VzFolders.Pipeline
 {
@@ -27,6 +28,8 @@ namespace VzFolders.Pipeline
                 case ".anim":
                 case ".controller":
                 case ".overridecontroller":
+                case ".signal":     // Timeline SignalAsset
+                case ".playable":   // Timeline/PlayableAsset
                     return Animation;
 
                 case ".fbx":
@@ -78,9 +81,26 @@ namespace VzFolders.Pipeline
                 case ".vfxgraph":
                     return VFX;
 
+                // ".asset" is Unity's catch-all extension for serialized ScriptableObjects/native
+                // assets (baked meshes, settings, palettes...), so it can only be classified by
+                // inspecting its actual runtime type — never left to guesswork by name alone.
+                case ".asset":
+                    return GetFolderForGenericAsset(assetPath);
+
                 default:
                     return null;
             }
+        }
+
+        static string GetFolderForGenericAsset(string assetPath)
+        {
+            var type = AssetDatabase.GetMainAssetTypeAtPath(assetPath);
+            if (type == null) return null;
+
+            if (type == typeof(Mesh)) return Mesh;
+            if (type == typeof(AnimationClip) || type == typeof(AnimatorOverrideController) || typeof(RuntimeAnimatorController).IsAssignableFrom(type)) return Animation;
+
+            return null; // an unrecognized ScriptableObject/native asset — safer to leave it where it is
         }
 
         static bool HasAnimationClips(string assetPath)
