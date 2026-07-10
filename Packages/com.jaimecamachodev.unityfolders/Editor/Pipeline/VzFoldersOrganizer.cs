@@ -14,7 +14,7 @@ namespace VzFolders.Pipeline
         const string assetsDir = "Assets/VzFolders/";
 
         [MenuItem(dir + "Organize/Organize this folder", false, 220)]
-        [MenuItem(assetsDir + "Organize this folder", false, 220)]
+        [MenuItem(assetsDir + "Organize/Organize this folder", false, 220)]
         static void OrganizeSelectedFolder()
         {
             var folderPath = VzFoldersPipelineUtils.GetSelectedFolderOrFallback();
@@ -28,7 +28,7 @@ namespace VzFolders.Pipeline
         }
 
         [MenuItem(dir + "Organize/Organize into new subfolder...", false, 221)]
-        [MenuItem(assetsDir + "Organize into new subfolder...", false, 221)]
+        [MenuItem(assetsDir + "Organize/Organize into new subfolder...", false, 221)]
         static void OrganizeIntoNewSubfolderMenu()
         {
             var folderPath = VzFoldersPipelineUtils.GetSelectedFolderOrFallback();

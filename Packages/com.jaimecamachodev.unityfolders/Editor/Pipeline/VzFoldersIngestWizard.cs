@@ -15,7 +15,7 @@ namespace VzFolders.Pipeline
         enum MaterialMode { None, Mas, Lit }
 
         [MenuItem(dir + "Ingest pipeline/Full pipeline...", false, 243)]
-        [MenuItem(assetsDir + "Full ingest pipeline...", false, 243)]
+        [MenuItem(assetsDir + "Ingest pipeline/Full pipeline...", false, 243)]
         static void ShowWizard()
         {
             var folderPath = VzFoldersPipelineUtils.GetSelectedFolderOrFallback();

@@ -15,11 +15,11 @@ namespace VzFolders.Pipeline
         const string urpLitShaderName = "Universal Render Pipeline/Lit";
 
         [MenuItem(dir + "Ingest pipeline/Create materials (MAS: Color, Normal, MetalSmooth, AO)", false, 240)]
-        [MenuItem(assetsDir + "Create materials (MAS)", false, 240)]
+        [MenuItem(assetsDir + "Ingest pipeline/Create materials (MAS)", false, 240)]
         static void CreateMasMaterialsMenu() => RunOnSelectedFolder(CreateMasMaterialsInFolder);
 
         [MenuItem(dir + "Ingest pipeline/Create materials (Lit: Color, Normal, Emission, MaskMap)", false, 241)]
-        [MenuItem(assetsDir + "Create materials (Lit)", false, 241)]
+        [MenuItem(assetsDir + "Ingest pipeline/Create materials (Lit)", false, 241)]
         static void CreateLitMaterialsMenu() => RunOnSelectedFolder(CreateLitMaterialsInFolder);
 
         static void RunOnSelectedFolder(System.Action<string> action)

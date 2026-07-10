@@ -11,7 +11,7 @@ namespace VzFolders.Pipeline
         const string assetsDir = "Assets/VzFolders/";
 
         [MenuItem(dir + "Project structure/Create base project structure", false, 200)]
-        [MenuItem(assetsDir + "Create base project structure", false, 200)]
+        [MenuItem(assetsDir + "Project structure/Create base project structure", false, 200)]
         static void CreateBaseProjectStructure()
         {
             CreateFolder("Assets", "1-Programming");
@@ -42,7 +42,7 @@ namespace VzFolders.Pipeline
         }
 
         [MenuItem(dir + "Project structure/Create asset type folders...", false, 201)]
-        [MenuItem(assetsDir + "Create asset type folders...", false, 201)]
+        [MenuItem(assetsDir + "Project structure/Create asset type folders...", false, 201)]
         static void CreateAssetTypeFoldersMenu()
         {
             NewTypedFolderWizard.Show(VzFoldersPipelineUtils.GetSelectedFolderOrFallback());

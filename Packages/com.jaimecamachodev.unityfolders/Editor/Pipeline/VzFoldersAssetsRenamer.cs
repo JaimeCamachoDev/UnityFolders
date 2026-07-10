@@ -13,7 +13,7 @@ namespace VzFolders.Pipeline
         const string assetsDir = "Assets/VzFolders/";
 
         [MenuItem(dir + "Organize/Rename assets with folder prefix", false, 222)]
-        [MenuItem(assetsDir + "Rename assets with folder prefix", false, 222)]
+        [MenuItem(assetsDir + "Organize/Rename assets with folder prefix", false, 222)]
         static void RenameAssetsMenu()
         {
             var folderPath = VzFoldersPipelineUtils.GetSelectedFolderOrFallback();

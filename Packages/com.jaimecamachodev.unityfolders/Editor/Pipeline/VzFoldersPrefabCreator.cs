@@ -12,7 +12,7 @@ namespace VzFolders.Pipeline
         const string assetsDir = "Assets/VzFolders/";
 
         [MenuItem(dir + "Ingest pipeline/Create prefabs from Mesh folder", false, 242)]
-        [MenuItem(assetsDir + "Create prefabs from Mesh folder", false, 242)]
+        [MenuItem(assetsDir + "Ingest pipeline/Create prefabs from Mesh folder", false, 242)]
         static void CreatePrefabsMenu()
         {
             var folderPath = VzFoldersPipelineUtils.GetSelectedFolderOrFallback();
