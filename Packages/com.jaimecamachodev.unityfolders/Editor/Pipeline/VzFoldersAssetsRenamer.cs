@@ -28,34 +28,27 @@ namespace VzFolders.Pipeline
 
         internal static void RenameAssetsInFolder(string folderPath)
         {
+            AssetDatabase.Refresh(); // import any file dropped in via the OS file explorer before AssetDatabase can see it
+
             var rootName = folderPath.GetFilename(withExtension: true);
             var guids = AssetDatabase.FindAssets(string.Empty, new[] { folderPath });
 
-            try
+            foreach (var guid in guids)
             {
-                AssetDatabase.StartAssetEditing();
+                var assetPath = guid.ToPath();
+                if (AssetDatabase.IsValidFolder(assetPath)) continue;
 
-                foreach (var guid in guids)
-                {
-                    var assetPath = guid.ToPath();
-                    if (AssetDatabase.IsValidFolder(assetPath)) continue;
+                var directory = assetPath.GetParentPath();
+                var extension = assetPath.GetExtension();
+                var nameNoExt = assetPath.GetFilename(withExtension: false);
 
-                    var directory = assetPath.GetParentPath();
-                    var extension = assetPath.GetExtension();
-                    var nameNoExt = assetPath.GetFilename(withExtension: false);
+                if (nameNoExt == rootName || nameNoExt.StartsWith(rootName + "_")) continue;
 
-                    if (nameNoExt == rootName || nameNoExt.StartsWith(rootName + "_")) continue;
+                var underscoreIndex = nameNoExt.IndexOf('_');
+                var suffix = underscoreIndex >= 0 ? nameNoExt.Substring(underscoreIndex + 1) : nameNoExt;
 
-                    var underscoreIndex = nameNoExt.IndexOf('_');
-                    var suffix = underscoreIndex >= 0 ? nameNoExt.Substring(underscoreIndex + 1) : nameNoExt;
-
-                    var newPath = AssetDatabase.GenerateUniqueAssetPath(directory.CombinePath(rootName + "_" + suffix + extension));
-                    AssetDatabase.MoveAsset(assetPath, newPath);
-                }
-            }
-            finally
-            {
-                AssetDatabase.StopAssetEditing();
+                var newPath = AssetDatabase.GenerateUniqueAssetPath(directory.CombinePath(rootName + "_" + suffix + extension));
+                AssetDatabase.MoveAsset(assetPath, newPath);
             }
 
             AssetDatabase.Refresh();
