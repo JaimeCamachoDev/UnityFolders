@@ -19,25 +19,65 @@ MonoBehaviour:
     - 7f935b009bb4d7346a56117d94372efc
     - 83b84696e536d864aa44916dac286b4d
     - b1700428267a2e54b856d3f59691a01d
+    - cb02314886a447a4d8c847c6c0757ccf
+    - 1f2837ce0a120b24db33dd0d9c543042
+    - eadd63fb37f65fc4f9f1654cdcd29779
+    - 263ceb9f3e267584285b16dc97921d08
+    - 5c0b094b747f30940877242c1103005d
+    - 0ea3d0d8d6b6615418e5df3e30ec015f
+    - 2757ac4900d3ace45bb794f9799826a7
+    - 8ceb783ce37095a40baa483527f8d6f5
     values:
-    - iconNameOrGuid: 
+    - iconNameOrGuid: Settings
+      colorIndex: 9
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: cs Script Icon
       colorIndex: 1
       isIconRecursive: 0
       isColorRecursive: 0
-    - iconNameOrGuid: 
-      colorIndex: 3
-      isIconRecursive: 0
-      isColorRecursive: 0
-    - iconNameOrGuid: 
-      colorIndex: 8
-      isIconRecursive: 0
-      isColorRecursive: 0
-    - iconNameOrGuid: 
+    - iconNameOrGuid: Scene
       colorIndex: 4
       isIconRecursive: 0
       isColorRecursive: 0
-    - iconNameOrGuid: 
+    - iconNameOrGuid: Grid.PaintTool
       colorIndex: 7
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: cs Script Icon
+      colorIndex: 2
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: Prefab Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: LightProbes Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: AudioSource Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: PlayableDirector Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: Cubemap Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: Camera Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: ViewToolOrbit On
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: GUILayer Icon
+      colorIndex: 0
       isIconRecursive: 0
       isColorRecursive: 0
   bookmarks: []

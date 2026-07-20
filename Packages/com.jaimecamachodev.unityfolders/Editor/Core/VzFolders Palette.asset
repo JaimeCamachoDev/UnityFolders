@@ -24,8 +24,8 @@ MonoBehaviour:
   - {r: 0.83508486, g: 0.36924, b: 0.99876004, a: 0.1}
   - {r: 0.89888406, g: 0.33231598, b: 0.67225707, a: 0.1}
   colorsEnabled: 1
-  colorSaturation: 1
-  colorBrightness: 1
+  colorSaturation: 1.1
+  colorBrightness: 0.90000004
   colorGradientsEnabled: 1
   iconRows:
   - builtinIcons:
@@ -76,5 +76,23 @@ MonoBehaviour:
     - Font Icon
     - RawImage Icon
     - Settings Icon
+    customIcons: []
+    enabled: 1
+  - builtinIcons: []
+    customIcons:
+    - Grid.PaintTool
+    - Scene
+    - Settings
+    - cs Script Icon
+    - CustomTool
+    enabled: 1
+  - builtinIcons: []
+    customIcons:
+    - PlayableDirector Icon
+    - Camera Icon
+    - ViewToolOrbit On
+    - GUILayer Icon
+    enabled: 1
+  - builtinIcons: []
     customIcons: []
     enabled: 1
