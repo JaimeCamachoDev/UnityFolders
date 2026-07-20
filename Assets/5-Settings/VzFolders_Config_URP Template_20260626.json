@@ -1,0 +1,217 @@
+﻿{
+    "vzFoldersConfig": "1.0",
+    "exportedAt": "2026-07-20T08:58:19.7022310Z",
+    "exportedFrom": "URP Template",
+    "folders": [
+        {
+            "path": "Assets/5-Settings",
+            "name": "5-Settings",
+            "colorIndex": 9,
+            "isColorRecursive": false,
+            "iconName": "Settings",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/1-Programming",
+            "name": "1-Programming",
+            "colorIndex": 1,
+            "isColorRecursive": false,
+            "iconName": "cs Script Icon",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/3-Scenes",
+            "name": "3-Scenes",
+            "colorIndex": 4,
+            "isColorRecursive": false,
+            "iconName": "Scene",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/2-Art",
+            "name": "2-Art",
+            "colorIndex": 7,
+            "isColorRecursive": false,
+            "iconName": "Grid.PaintTool",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/4-Presets",
+            "name": "4-Presets",
+            "colorIndex": 2,
+            "isColorRecursive": false,
+            "iconName": "cs Script Icon",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/2-Art/1-3D",
+            "name": "1-3D",
+            "colorIndex": 0,
+            "isColorRecursive": false,
+            "iconName": "Prefab Icon",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/2-Art/2-VFX",
+            "name": "2-VFX",
+            "colorIndex": 0,
+            "isColorRecursive": false,
+            "iconName": "LightProbes Icon",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/2-Art/3-SFX",
+            "name": "3-SFX",
+            "colorIndex": 0,
+            "isColorRecursive": false,
+            "iconName": "AudioSource Icon",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/2-Art/4-Directors",
+            "name": "4-Directors",
+            "colorIndex": 0,
+            "isColorRecursive": false,
+            "iconName": "PlayableDirector Icon",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/2-Art/5-Skyboxes",
+            "name": "5-Skyboxes",
+            "colorIndex": 0,
+            "isColorRecursive": false,
+            "iconName": "Cubemap Icon",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/2-Art/6-Videos",
+            "name": "6-Videos",
+            "colorIndex": 0,
+            "isColorRecursive": false,
+            "iconName": "Camera Icon",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/2-Art/7-PostProcessing",
+            "name": "7-PostProcessing",
+            "colorIndex": 0,
+            "isColorRecursive": false,
+            "iconName": "ViewToolOrbit On",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        },
+        {
+            "path": "Assets/2-Art/8-UI",
+            "name": "8-UI",
+            "colorIndex": 0,
+            "isColorRecursive": false,
+            "iconName": "GUILayer Icon",
+            "isIconRecursive": false,
+            "customIconOriginalPath": "",
+            "customIconEmbedded": "",
+            "customIconFileName": ""
+        }
+    ],
+    "palette": {
+        "colors": [
+            {
+                "r": 0.9654679894447327,
+                "g": 0.39344412088394167,
+                "b": 0.3569319546222687,
+                "a": 0.10000000149011612
+            },
+            {
+                "r": 0.9737909436225891,
+                "g": 0.6546242833137512,
+                "b": 0.36000895500183108,
+                "a": 0.10000000149011612
+            },
+            {
+                "r": 0.7978319525718689,
+                "g": 0.8572689890861511,
+                "b": 0.31693097949028017,
+                "a": 0.10000000149011612
+            },
+            {
+                "r": 0.44409602880477908,
+                "g": 0.8323000073432922,
+                "b": 0.307699978351593,
+                "a": 0.10000000149011612
+            },
+            {
+                "r": 0.307699978351593,
+                "g": 0.8323000073432922,
+                "b": 0.5804920196533203,
+                "a": 0.10000000149011612
+            },
+            {
+                "r": 0.307699978351593,
+                "g": 0.8008241057395935,
+                "b": 0.8323000073432922,
+                "a": 0.10000000149011612
+            },
+            {
+                "r": 0.3692399859428406,
+                "g": 0.6210479736328125,
+                "b": 0.9987600445747376,
+                "a": 0.10000000149011612
+            },
+            {
+                "r": 0.6395608186721802,
+                "g": 0.47693493962287905,
+                "b": 1.2900649309158326,
+                "a": 0.10000000149011612
+            },
+            {
+                "r": 0.835084855556488,
+                "g": 0.3692399859428406,
+                "b": 0.9987600445747376,
+                "a": 0.10000000149011612
+            },
+            {
+                "r": 0.8988840579986572,
+                "g": 0.33231598138809206,
+                "b": 0.6722570657730103,
+                "a": 0.10000000149011612
+            }
+        ],
+        "colorSaturation": 1.100000023841858,
+        "colorBrightness": 0.9000000357627869,
+        "colorGradientsEnabled": true
+    }
+}
