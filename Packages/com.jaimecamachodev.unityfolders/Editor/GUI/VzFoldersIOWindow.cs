@@ -1,9 +1,10 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEditor;
+using VzFolders.UI;
 
 namespace VzFolders.IO
 {
@@ -13,19 +14,19 @@ namespace VzFolders.IO
         private Mode _mode = Mode.None;
 
         private VzFoldersImporter.ImportResult _importResult;
-        private string _loadedConfigPath;
         private VzFoldersConfig _loadedConfig;
 
         private bool _importPalette = true;
-        private Vector2 _scroll;
 
         private Dictionary<VzFoldersImporter.AmbiguousEntry, string> _ambiguousResolutions = new();
+
+        private ScrollView _root;
 
         public static void OpenForExport()
         {
             var w = GetWindow<VzFoldersIOWindow>("VzFolders Export");
             w.minSize = new Vector2(480, 300);
-            w._mode = Mode.ExportPreview;
+            w.SetMode(Mode.ExportPreview);
             w.Show();
         }
 
@@ -33,60 +34,64 @@ namespace VzFolders.IO
         {
             var w = GetWindow<VzFoldersIOWindow>("VzFolders Import");
             w.minSize = new Vector2(480, 400);
-            w._mode = Mode.None;
+            w.SetMode(Mode.None);
             w.Show();
         }
 
-        private void OnGUI()
+        private void CreateGUI()
         {
-            EditorGUILayout.Space(6);
-            _scroll = EditorGUILayout.BeginScrollView(_scroll);
+            _root = new ScrollView();
+            VzUIStyle.ApplyRoot(_root);
+            rootVisualElement.Add(_root);
+
+            Rebuild();
+        }
+
+        // Reused window instances (Unity may hand back the same GetWindow<T> instance) need an
+        // explicit Rebuild when switching modes, since CreateGUI only runs once per window lifetime.
+        private void SetMode(Mode mode)
+        {
+            _mode = mode;
+            if (_root != null) Rebuild();
+        }
+
+        private void Rebuild()
+        {
+            _root.Clear();
             switch (_mode)
             {
                 case Mode.None: DrawInitialButtons(); break;
                 case Mode.ExportPreview: DrawExportPreview(); break;
                 case Mode.ImportPreview: DrawImportPreview(); break;
             }
-            EditorGUILayout.EndScrollView();
         }
 
         private void DrawInitialButtons()
         {
-            BeginCard("VzFolders Configuration");
+            var panel = new VzUIPanel("VzFolders Configuration");
 
-            if (PrimaryButton("Export current configuration...", height: 32))
-                _mode = Mode.ExportPreview;
+            panel.Add(new VzUIActionButton("Export current configuration...", () => SetMode(Mode.ExportPreview)));
+            panel.Add(new VzUIActionButton("Import configuration from file...", LoadImportFile));
 
-            EditorGUILayout.Space(4);
-
-            if (PrimaryButton("Import configuration from file...", height: 32))
-                LoadImportFile();
-
-            EndCard();
+            _root.Add(panel);
         }
 
         private void DrawExportPreview()
         {
-            BeginCard("Export Preview");
+            var panel = new VzUIPanel("Export Preview");
 
             var config = VzFoldersExporter.BuildConfig();
             var folderCount = config.folders.Count;
             var customIconCount = config.folders.Count(f => !string.IsNullOrEmpty(f.customIconEmbedded));
 
-            EditorGUILayout.HelpBox(
-                $"Ready to export:\n  • {folderCount} folder configurations\n  • {customIconCount} custom icons (embedded as Base64)\n  • Palette: {(config.palette != null ? "yes" : "no")}",
-                MessageType.Info
-            );
-            EditorGUILayout.Space(8);
+            panel.Add(new VzUIInfoLabel(
+                $"Ready to export:\n  • {folderCount} folder configurations\n  • {customIconCount} custom icons (embedded as Base64)\n  • Palette: {(config.palette != null ? "yes" : "no")}"
+            ));
 
-            if (PrimaryButton("Export to file...", height: 30))
-                VzFoldersExporter.ExportToFile();
+            panel.Add(new VzUIActionButton("Export to file...", () => VzFoldersExporter.ExportToFile()));
+            panel.Add(SecondaryButton("Cancel", () => SetMode(Mode.None)));
 
-            EditorGUILayout.Space(4);
-            if (GUILayout.Button("Cancel"))
-                _mode = Mode.None;
-
-            EndCard();
+            _root.Add(panel);
         }
 
         private void LoadImportFile()
@@ -94,76 +99,82 @@ namespace VzFolders.IO
             var path = EditorUtility.OpenFilePanel("Import VzFolders Configuration", "", "json");
             if (string.IsNullOrEmpty(path)) return;
 
-            _loadedConfig = VzFoldersImporter.LoadConfig(path);
-            if (_loadedConfig == null) return;
+            var config = VzFoldersImporter.LoadConfig(path);
+            if (config == null) return;
 
-            _loadedConfigPath = path;
+            _loadedConfig = config;
             _importResult = VzFoldersImporter.Resolve_Internal(_loadedConfig);
             _ambiguousResolutions.Clear();
-            _mode = Mode.ImportPreview;
+            SetMode(Mode.ImportPreview);
         }
 
         private void DrawImportPreview()
         {
-            if (_importResult == null) { _mode = Mode.None; return; }
+            if (_importResult == null) { SetMode(Mode.None); return; }
 
-            BeginCard("Import Preview");
-            EditorGUILayout.LabelField($"Source: {_loadedConfig.exportedFrom} — {_loadedConfig.exportedAt}", EditorStyles.miniLabel);
-            EndCard();
+            var summary = new VzUIPanel("Import Preview");
+            summary.Add(new VzUIInfoLabel($"Source: {_loadedConfig.exportedFrom} — {_loadedConfig.exportedAt}"));
+            _root.Add(summary);
 
-            DrawSection($"Resolved ({_importResult.Resolved.Count})", StatusGreen, () =>
-            {
-                foreach (var e in _importResult.Resolved)
-                    EditorGUILayout.LabelField($"{e.SourcePath}  ->  {e.TargetPath}  [{e.MatchType}]", EditorStyles.miniLabel);
-            });
+            DrawSection($"Resolved ({_importResult.Resolved.Count})", VzUIColors.EnabledBorder, () =>
+                _importResult.Resolved.Select(e => (VisualElement)new VzUIInfoLabel($"{e.SourcePath}  ->  {e.TargetPath}  [{e.MatchType}]")));
 
             if (_importResult.Ambiguous.Count > 0)
             {
-                DrawSection($"Ambiguous ({_importResult.Ambiguous.Count}) — choose target folder", StatusOrange, () =>
-                {
-                    foreach (var e in _importResult.Ambiguous)
-                    {
-                        EditorGUILayout.LabelField($"Source: {e.SourcePath}", EditorStyles.boldLabel);
-                        if (!_ambiguousResolutions.TryGetValue(e, out var chosen)) chosen = "(skip)";
-                        var options = new List<string> { "(skip)" };
-                        options.AddRange(e.Candidates);
-                        var idx = options.IndexOf(chosen);
-                        if (idx < 0) idx = 0;
-                        var newIdx = EditorGUILayout.Popup("Target folder", idx, options.ToArray());
-                        _ambiguousResolutions[e] = options[newIdx];
-                        EditorGUILayout.Space(4);
-                    }
-                });
+                DrawSection($"Ambiguous ({_importResult.Ambiguous.Count}) — choose target folder", new Color(1f, 0.6f, 0f), () =>
+                    _importResult.Ambiguous.Select(e => (VisualElement)BuildAmbiguousRow(e)));
             }
 
             if (_importResult.Unresolved.Count > 0)
             {
-                DrawSection($"Not found ({_importResult.Unresolved.Count})", StatusRed, () =>
-                {
-                    foreach (var e in _importResult.Unresolved)
-                        EditorGUILayout.LabelField($"{e.SourcePath}  —  {e.Reason}", EditorStyles.miniLabel);
-                });
+                DrawSection($"Not found ({_importResult.Unresolved.Count})", VzUIColors.DisabledBorder, () =>
+                    _importResult.Unresolved.Select(e => (VisualElement)new VzUIInfoLabel($"{e.SourcePath}  —  {e.Reason}")));
             }
 
             if (_loadedConfig.palette != null)
             {
-                EditorGUILayout.Space(4);
-                _importPalette = StatusToggle("Import palette colors", _importPalette);
+                var paletteToggle = new VzUIToggleChip(
+                    "Import palette colors",
+                    () => _importPalette,
+                    value => _importPalette = value
+                );
+                _root.Add(paletteToggle);
             }
 
-            EditorGUILayout.Space(10);
-            EditorGUILayout.BeginHorizontal();
+            var actionsRow = new VisualElement();
+            actionsRow.style.flexDirection = FlexDirection.Row;
+            actionsRow.style.marginTop = 6;
 
-            if (PrimaryButton("Apply Import", height: 30))
-                ApplyImport();
+            var applyButton = new VzUIActionButton("Apply Import", ApplyImport);
+            applyButton.style.flexGrow = 1;
+            actionsRow.Add(applyButton);
 
-            if (GUILayout.Button("Cancel", GUILayout.Width(80)))
+            actionsRow.Add(SecondaryButton("Cancel", () =>
             {
-                _mode = Mode.None;
                 _importResult = null;
-            }
+                SetMode(Mode.None);
+            }));
 
-            EditorGUILayout.EndHorizontal();
+            _root.Add(actionsRow);
+        }
+
+        private VisualElement BuildAmbiguousRow(VzFoldersImporter.AmbiguousEntry e)
+        {
+            var row = new VisualElement();
+
+            row.Add(new VzUIInfoLabel($"Source: {e.SourcePath}"));
+
+            if (!_ambiguousResolutions.TryGetValue(e, out var chosen)) chosen = "(skip)";
+            var options = new List<string> { "(skip)" };
+            options.AddRange(e.Candidates);
+            if (!options.Contains(chosen)) chosen = "(skip)";
+
+            var dropdown = new DropdownField("Target folder", options, options.IndexOf(chosen));
+            dropdown.RegisterValueChangedCallback(evt => _ambiguousResolutions[e] = evt.newValue);
+            _ambiguousResolutions[e] = chosen;
+
+            row.Add(dropdown);
+            return row;
         }
 
         private void ApplyImport()
@@ -174,79 +185,25 @@ namespace VzFolders.IO
                 if (kvp.Value == "(skip)") continue;
                 VzFoldersImporter.ApplyAmbiguous(kvp.Key, kvp.Value);
             }
-            _mode = Mode.None;
             _importResult = null;
             Close();
         }
 
-        private void DrawSection(string title, Color statusColor, System.Action content)
+        // A card whose header is tinted with statusColor and whose body is built by contentBuilder —
+        // used for the Resolved (green) / Ambiguous (orange) / Not found (red) breakdowns.
+        private void DrawSection(string title, Color statusColor, System.Func<IEnumerable<VisualElement>> contentBuilder)
         {
-            BeginCard(title, statusColor);
-            content?.Invoke();
-            EndCard();
+            var panel = new VzUIPanel(title);
+            panel.TitleLabel.style.color = statusColor;
+
+            foreach (var element in contentBuilder())
+                panel.Add(element);
+
+            _root.Add(panel);
         }
 
-        // ------------------------------------------------------------------
-        // Card / button styling — boxed sections with a bold header and full
-        // width action buttons, matching the rest of VzFolders' look instead
-        // of bare EditorGUILayout labels and default-grey buttons.
-        // ------------------------------------------------------------------
-
-        static readonly Color PrimaryBlue = new Color(0.24f, 0.42f, 0.68f);
-        static readonly Color StatusGreen = new Color(0.16f, 0.5f, 0.2f);
-        static readonly Color StatusOrange = new Color(0.75f, 0.45f, 0.05f);
-        static readonly Color StatusRed = new Color(0.6f, 0.18f, 0.16f);
-        static readonly Color StatusGrey = new Color(0.35f, 0.35f, 0.35f);
-
-        static GUIStyle _cardStyle;
-        static GUIStyle CardStyle() => _cardStyle ??= new GUIStyle(EditorStyles.helpBox) { padding = new RectOffset(10, 10, 8, 10) };
-
-        static GUIStyle _primaryButtonStyle;
-        static GUIStyle PrimaryButtonStyle() => _primaryButtonStyle ??= new GUIStyle(GUI.skin.button)
-        {
-            fontStyle = FontStyle.Bold,
-            normal = { textColor = Color.white },
-            hover = { textColor = Color.white },
-            active = { textColor = Color.white },
-        };
-
-        void BeginCard(string title, Color? headerColor = null)
-        {
-            EditorGUILayout.BeginVertical(CardStyle());
-
-            var prevColor = GUI.color;
-            if (headerColor.HasValue) GUI.color = headerColor.Value;
-            EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
-            GUI.color = prevColor;
-
-            EditorGUILayout.Space(4);
-        }
-
-        void EndCard()
-        {
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.Space(6);
-        }
-
-        static bool PrimaryButton(string text, float height)
-        {
-            var prevBg = GUI.backgroundColor;
-            GUI.backgroundColor = PrimaryBlue;
-            var clicked = GUILayout.Button(text, PrimaryButtonStyle(), GUILayout.Height(height));
-            GUI.backgroundColor = prevBg;
-            return clicked;
-        }
-
-        // A full-width toggle rendered as a colored status bar (green "Enabled" / grey "Disabled"),
-        // like the on/off chips used elsewhere for boolean options.
-        static bool StatusToggle(string label, bool value)
-        {
-            var prevBg = GUI.backgroundColor;
-            GUI.backgroundColor = value ? StatusGreen : StatusGrey;
-            var clicked = GUILayout.Button($"{label} — {(value ? "Enabled" : "Disabled")}", PrimaryButtonStyle(), GUILayout.Height(24));
-            GUI.backgroundColor = prevBg;
-            return clicked ? !value : value;
-        }
+        private static VzUIActionButton SecondaryButton(string label, System.Action onClick) =>
+            new(label, onClick, VzUIColors.NeutralBackground, VzUIColors.NeutralBorder, VzUIColors.NeutralText);
     }
 }
 #endif
