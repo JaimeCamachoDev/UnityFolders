@@ -62,6 +62,37 @@ jobs:
           curl -fsSL https://cdn.packages.unity.com/upm-cli/install.sh | bash
           echo "$HOME/.upm/bin" >> "$GITHUB_PATH"
 
+      # Diagnostic only — prints lengths and flags stray whitespace/newlines without
+      # ever printing the actual secret values, so a bad copy-paste is visible in the
+      # log instead of surfacing as Unity's generic "Invalid service account credentials".
+      - name: Sanity-check UPM credentials (no secret values printed)
+        env:
+          UPM_SERVICE_ACCOUNT_KEY_ID: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_ID }}
+          UPM_SERVICE_ACCOUNT_KEY_SECRET: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_SECRET }}
+          UNITY_ORGANIZATION_ID: ${{ secrets.UNITY_ORGANIZATION_ID }}
+        run: |
+          bad=0
+          check() {
+            name="$1"
+            value="$2"
+            if [ -z "$value" ]; then
+              echo "::error::$name is empty or not set"
+              bad=1
+              return
+            fi
+            len=${#value}
+            echo "$name: length=$len"
+            stripped="$(printf '%s' "$value" | tr -d '[:space:]')"
+            if [ "${#stripped}" -ne "$len" ]; then
+              echo "::error::$name contains whitespace/newline characters (likely a copy-paste artifact) — re-enter it without any surrounding spaces or trailing newline."
+              bad=1
+            fi
+          }
+          check "UPM_SERVICE_ACCOUNT_KEY_ID" "$UPM_SERVICE_ACCOUNT_KEY_ID"
+          check "UPM_SERVICE_ACCOUNT_KEY_SECRET" "$UPM_SERVICE_ACCOUNT_KEY_SECRET"
+          check "UNITY_ORGANIZATION_ID" "$UNITY_ORGANIZATION_ID"
+          exit $bad
+
       - name: Pack and sign the package
         env:
           UPM_SERVICE_ACCOUNT_KEY_ID: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_ID }}
