@@ -7,7 +7,6 @@
 
 _**Carpetas personalizadas para Unity**_
 
-
 # 🎮 Proyecto Unity - Estructura de Carpetas
 
 Esta es la estructura oficial del proyecto, diseñada para maximizar claridad, escalabilidad y eficiencia.
@@ -116,5 +115,3 @@ La clasificación por tipo reconoce, además de las extensiones obvias (`.fbx`, 
 ---
 
 > **NOTA:** Si introduces nuevas escenas o assets globales, asegúrate de seguir este esquema para mantener la consistencia.
-
-
